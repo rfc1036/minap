@@ -1,0 +1,49 @@
+[%
+  page.title = 'Usage Policy';
+%]
+[% page.css = BLOCK %]
+[% END %]
+[% WRAPPER htmlpage %]
+<h1>[% page.title %]</h1>
+
+<div id="policy">
+
+<p>
+Each member must have a valid non private ASN (Autonomous System Number), use
+BGP version 4 for peerings and provide a 24x7 operational contact.</p>
+<p>Only free of charge traffic is allowed over MINAP: members shall not sell
+peering or transit over the MINAP infrastructure.</p>
+
+<p>Members shall not give transit to the address space of the peering LAN.
+MINAP connected interfaces must only use the IP addresses and netmasks
+(prefix lengths) assigned to them by MINAP.</p>
+
+<p>Each member is physically connected to the MINAP switch via a dedicated
+cable. Cable sharing is not allowed and only one MAC address is authorised per
+member port. Members shall not connect intermediate layer 2 devices between the
+MINAP switch and their peering router unless preventively approved by the MINAP
+NOC.</p>
+
+<p>Features and link-local protocols like, but not limited to: Proxy ARP, ICMP
+redirects, the Spanning Tree Protocol, IGMP, CDP, VTP, LLDP, OSFP, PIM and
+ICMPv6 ND-RA are not allowed and must be disabled.</p>
+<p>Frames sent to the MINAP port must have one of the following ethertypes:
+0x0800 (IPv4), 0x0806 (ARP) or 0x86dd (IPv6). Frames shall not be addressed to
+a multicast or broadcast MAC destination address except when needed by the ARP
+and ICMPv6-ND protocols.</p>
+<p>MINAP cannot be responsible for direct or indirect consequential loss, loss
+of profits, business, revenue, goodwill, or anticipated savings resulting from
+a MINAP service outage.</p>
+<p><strong>MINAP can suspend or discontinue the connection, in whole or in
+part, with no advance warnings:</strong></p>
+<ul>
+<li>If the member is not respecting any of the rules above or is causing
+technical problems to the MINAP infrastructure or to other members.</li>
+<li>In case of force majeur.</li>
+<li>If MINAP receives an autoritative request or desires to comply with a statutory obligation.</li>
+<li>If maintenance is required.</li>
+</ul>
+
+</div>
+
+[% END %]

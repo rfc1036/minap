@@ -1,0 +1,6 @@
+User-agent: NPBot
+Disallow: /
+
+User-agent: TurnitinBot
+Disallow: /
+

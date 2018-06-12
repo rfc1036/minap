@@ -1,0 +1,130 @@
+#!/usr/bin/perl
+# vim: shiftwidth=4 tabstop=4
+#
+# Copyright 2018 by Marco d'Itri <md@linux.it>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+use warnings;
+use strict;
+use utf8;
+
+use HTTP::Tiny;
+use Path::Tiny;
+use YAML::XS;
+use JSON::XS;
+use Template;
+use List::Util qw(sum0);
+
+##############################################################################
+{
+	my $config = Load(path('etc/members.conf')->slurp_utf8);
+	die 'Invalid configuration file' if not ref $config  eq 'HASH';
+
+	my $ixf = ixp_manager_ixf('https://manager.minap.it/api/');
+	# sanity check
+	die if not $ixf->{ixp_list}->[0]->{shortname} eq 'MINAP';
+	#use DDP; p $ixf;
+
+	my @members = members_from_ixf($ixf, $config) or die;
+	#use DDP; p @members;
+
+	build_page(\@members);
+	exit;
+}
+
+##############################################################################
+sub ixp_manager_ixf {
+	my ($api) = @_;
+
+	my $cache = path('ixf.json');
+	return decode_json($cache->slurp_utf8) if $cache->exists;
+
+	my $url = $api . 'v4/member-export/ixf/0.7';
+	my $http = HTTP::Tiny->new(verify_SSL => 1);
+	my $response = $http->get($url);
+	$response->{content} =~ s/\n$// if $response->{status} == 599;
+	die "Could not download $url: "
+			. ($response->{status} == 599 ? $response->{content}
+			: "$response->{status} $response->{reason}") . "!\n"
+		if not $response->{success};
+
+	return decode_json($response->{content});
+}
+
+sub members_from_ixf {
+	my ($ixf, $config) = @_;
+
+	my %switch2pop = map { $_->{id} => $_->{colo} }
+		@{ $ixf->{ixp_list}->[0]->{switch} };
+
+	my %rs_limited = map { $_ => 1 } @{ $config->{rs_limited} };
+	my %ignore = map { $_ => 1 } @{ $config->{ignore} };
+
+	my @members;
+	foreach my $member (@{ $ixf->{member_list} }) {
+		next if $ignore { $member->{asnum} };
+		next if $member->{member_type} eq 'ixp';
+
+		foreach my $conn (@{ $member->{connection_list} }) {
+			my %c = (
+				name =>		$member->{name},
+				url =>		$member->{url},
+				asnum =>	$member->{asnum},
+				speed =>	sum0(map { $_->{if_speed} } @{ $conn->{if_list} }),
+				member_since => $member->{member_since},
+			);
+			$c{location} = $switch2pop{ $conn->{if_list}->[0]->{switch_id} }
+				if $conn->{if_list}->[0]->{switch_id};
+			if ($conn->{vlan_list}) {
+				if ($conn->{vlan_list}->[0]->{ipv4}) {
+					$c{rs4} = $conn->{vlan_list}->[0]->{ipv4}->{routeserver}
+						? 'Yes' : 'No';
+					$c{rs4_limited} = 1 if $rs_limited{ $member->{asnum} };
+					$c{ipv4} = $conn->{vlan_list}->[0]->{ipv4}->{address};
+				}
+				if ($conn->{vlan_list}->[0]->{ipv6}) {
+					$c{rs6} = $conn->{vlan_list}->[0]->{ipv6}->{routeserver}
+						? 'Yes' : 'No';
+					$c{ipv6} = $conn->{vlan_list}->[0]->{ipv6}->{address};
+				}
+			}
+
+			push(@members, \%c);
+		}
+	}
+
+	# add more members from the config file
+	push(@members, @{ $config->{more_members} || [] });
+
+	@members = sort { $a->{name} cmp $b->{name} } @members;
+
+	return @members;
+}
+
+##############################################################################
+sub build_page {
+	my ($members) = @_;
+
+	my %vars = (
+		members => $members,
+	);
+
+	my $template = Template->new(
+		POST_CHOMP	=> 1,
+		DEBUG_UNDEF	=> 1,
+		ENCODING	=> 'utf8',
+	) or die "Template->new: $Template::ERROR";
+
+	my $output;
+	$template->process('ttlib/members-table.tt2', \%vars, \$output)
+		or die $template->error;
+
+	path('ttlib/inc/members.html')->spew_utf8($output);
+
+	return;
+}
+

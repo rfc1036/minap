@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+if [ "$(hostname)" = 'bongo.bofh.it' ]; then
+  ttargs="$ttargs --define root_prefix=/minap"
+fi
+
+exec \
+ttree -f etc/ttree.cfg $ttargs "$@"
+

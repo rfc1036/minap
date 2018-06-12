@@ -1,0 +1,51 @@
+[%
+  page.title = 'Partners';
+%]
+[% page.css = BLOCK %]
+div#partners { text-align: center; }
+div#partners div { padding-bottom: 2em; }
+[% END %]
+[% WRAPPER htmlpage %]
+<h1>[% page.title %]</h1>
+
+<div id="partners">
+
+<div>
+<a href="https://www.caldera21.com/">
+<img src="[% site.url.images %]/logo-caldera21.png" width="150" height="70"
+ alt="Intercom"></a>
+</div>
+
+<div>
+<a href="https://www.enter.it/">
+<img src="[% site.url.images %]/logo-enter.png" width="257" height="56"
+ alt="Enter"></a>
+</div>
+
+<div>
+<a href="http://www.metrolink.it/">
+<img src="[% site.url.images %]/logo-metrolink.png" width="386" height="61"
+ alt="Metrolink"></a>
+</div>
+
+<div>
+<a href="https://www.seeweb.it/">
+<img src="[% site.url.images %]/logo-seeweb.png" width="284" height="84"
+ alt="Seeweb"></a>
+</div>
+
+<div>
+<a href="https://www.telnet.it/">
+<img src="[% site.url.images %]/logo-telnet.png" width="254" height="71"
+ alt="Telnet"></a>
+</div>
+
+<div>
+<a href="https://www.twt.it/">
+<img src="[% site.url.images %]/logo-twt.png" width="211" height="67"
+ alt="Telnet"></a>
+</div>
+
+</div>
+
+[% END %]

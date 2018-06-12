@@ -1,0 +1,33 @@
+[%
+  page.title = 'Application Form';
+%]
+[% WRAPPER htmlpage %]
+<h1>[% page.title %]</h1>
+
+<p>
+To join MINAP you need to provide the following information to our NOC.
+MINAP staff reserves the right to reject any request. Please have a look at
+our <a href="[% site.url.root %]/policy/">policy</a> section before applying.
+</p>
+
+<p>
+<strong>The following information must be provided to
+<a href="mailto:noc@minap.it">noc@minap.it</a>:</strong>
+</p>
+
+<ul class="bulleted">
+<li>Organization name.</li>
+<li>Web site.</li>
+<li>NOC contacts.</li>
+<li>E-mail address(es) to be subscribed to the mailing list.</li>
+<li>Autonomous System number.</li>
+<li>IRR AS macro (as-set), if any.</li>
+<li>Details of your peering policy, if it is not open.</li>
+<li>The MINAP PoP you plan to connect to.</li>
+<li>The speed of the port that you will connect (GE or 10GE).</li>
+</ul>
+
+<p>MINAP is a "bring your own optics" internet exchange: please arrange
+for delivery of an SFP or SFP+ to the operator of the PoP you will
+connect to.</p>
+[% END %]

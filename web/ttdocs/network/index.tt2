@@ -1,0 +1,15 @@
+[%
+  page.title = 'Network Weathermap';
+  page.nosidebar = 1
+%]
+[% WRAPPER htmlpage %]
+<h1>[% page.title %]</h1>
+
+<iframe src="https://manager.minap.it/weathermap/weathermap.html"
+  frameborder="0"
+  scrolling="no"
+  width="100%"
+  height="680"
+  style="margin: 0; padding: 0; margin-left: auto; margin-right: auto;"
+></iframe>
+[% END %]

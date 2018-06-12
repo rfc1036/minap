@@ -1,0 +1,64 @@
+[%
+  #root_prefix = '/minap';
+
+  site.url = {
+    root   = "${root_prefix}"
+    styles = "${root_prefix}/css/minap-yui"
+    images = "${root_prefix}/images"
+  };
+%]
+[% BLOCK htmlpage %]
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Milan Neutral Access Point[% ': ' _ page.title | html IF page.title %]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="[% site.url.styles %]/reset-fonts-grids.css" type="text/css">
+  <link rel="stylesheet" href="[% site.url.styles %]/style.css" type="text/css">
+[% IF page.css %]
+  <style type="text/css">
+[% page.css %]
+  </style>
+[% END %]
+[% IF page.script %]
+  <script type="text/javascript">
+[% page.script %]
+  </script>
+[% END %]
+</head>
+<body>
+[% IF page.nosidebar %]
+<div id="doc" class="yui-t7">
+[% ELSE %]
+[%# <div id="doc" class="yui-t2"> %]
+<div id="doc" class="yui-t5">
+[% END %]
+	<div id="hd">
+[% PROCESS inc/menu.html %]
+	</div>
+	<div id="bd">
+		<div id="yui-main">
+		<div class="yui-b">
+		<div class="yui-g">
+[% content %]
+		</div>
+		</div>
+		</div>
+		<div class="yui-b">
+[% IF page.nosidebar %]
+[% ELSIF page.userarea %]
+[% PROCESS 'inc/sections-userarea.html' %]
+[% ELSE %]
+[% PROCESS inc/news.html %]
+[% PROCESS inc/partners.html %]
+[% END %]
+		</div>
+	</div>
+	<div id="ft">
+		<p><a href="mailto:info@minap.it">MINAP - Milan Neutral Access Point</a> - <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a></p>
+	</div>
+</div>
+</body>
+</html>
+[% END %]

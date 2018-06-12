@@ -1,0 +1,31 @@
+[% MACRO pretty_speed(v) BLOCK %]
+[% DEBUG on %]
+[% IF v.empty %]
+[% ELSIF v < 1000 %]
+[% v %] Mbps
+[% ELSE %]
+[% v div 1000 %] Gbps
+[%- END %]
+[%- END %]
+<table cellspacing="0" class="members">
+<tr>
+ <th class="members">Name &nbsp;</th>
+ <th class="members">ASN &nbsp;</th>
+ <th class="members">Location &nbsp;</th>
+ <th class="members">Speed &nbsp;</th>
+ <th class="members">v4 IP &nbsp;</th>
+ <th class="members">v6 IP &nbsp;</th>
+ <th class="members">Route servers &nbsp;</th>
+</tr>
+[% FOREACH m IN members %]
+<tr class="row1">
+ <td class="members"><a class="row1" href="[% m.url | html %]">[% m.name | html %]</a> &nbsp; </td>
+ <td class="members">[% m.asnum %] &nbsp;</td>
+ <td class="members">[% m.location | html %] &nbsp;</td>
+ <td class="members" align="right">[% pretty_speed(m.speed) %] &nbsp;</td>
+ <td class="members">[% IF m.ipv4 %][% m.ipv4 %][% ELSE %](pending)[% END %] &nbsp;</td>
+ <td class="members">[% m.ipv6 %] &nbsp;</td>
+ <td class="members" align="right">[% m.rs4 %][% IF m.rs4_limited %]*[% END %] &nbsp;</td>
+</tr>
+[% END %]
+</table>

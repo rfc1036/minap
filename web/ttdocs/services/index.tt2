@@ -1,0 +1,25 @@
+[%
+  page.title = 'Services';
+%]
+[% WRAPPER htmlpage %]
+<h1>[% page.title %]</h1>
+
+<p>
+<strong>Services provided free of charge by MINAP to its members:</strong>
+</p>
+<ul>
+<li>A dedicated Gigabit Ethernet or Ten Gigabit Ethernet member port on the MINAP switches.</li>
+<li>Access to the MINAP members mailing list.</li>
+<li>24h by 7 days MINAP NOC access, phone and email based.</li>
+</ul>
+
+<p>
+<strong>Services not covered by MINAP membership:</strong>
+</p>
+<ul>
+<li>Cabling to the MINAP switch.</li>
+<li>SFP or SFP+ for the MINAP switch port.</li>
+<li>Colocation for the network equipment (muxes, routers, switches) of members.</li>
+<li>The members' backhaul link to MINAP.</li>
+</ul>
+[% END %]
