@@ -1,0 +1,105 @@
+[%
+  MACRO shutdown IF i.shutdown;
+    'shutdown';
+  ELSE;
+    'no shutdown';
+  END;
+
+  THROW 'Only edge ports are supported!' IF NOT i.type == 'edge';
+
+  # override the configured VLAN with the quarantine one
+  MACRO vlan_number(if) IF if.status == 'quarantine';
+    '866';
+  ELSE;
+    if.vlans.0.number;
+  END;
+%]
+[% BLOCK mac_acl %]
+[%
+  THROW 'No VLANs defined for the port' IF NOT i.vlans.size;
+
+  # accept all MACs if none is configured
+  SET i.vlans.0.macaddresses.0 = '0000.0000.0000'
+    IF NOT i.vlans.0.macaddresses.0;
+%]
+no mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
+mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
+ deny   host 0000.0000.0000 host dead.beef.0666
+[% FOREACH address = i.vlans.0.macaddresses %]
+ permit host [% address %] host 0000.0000.0000 0x806 0x0
+ permit host [% address %] host 0000.0000.0000 0x800 0x0
+ permit host [% address %] host 0000.0000.0000 0x8DD 0x0
+[% IF i.lagframing %]
+ permit host 0000.0000.0000 host 01:80:c2:00:00:02 0x8809 0x0
+[% END %]
+[% END %]
+ deny   host 0000.0000.0000 host 0000.0000.0000
+
+[% END %]
+
+ clogin [% switch %].minap.it
+
+! Please cut and paste:
+! ----8<----------------------------------------------------------------------
+configure terminal
+
+[% FOREACH i = ports %]
+[%
+  IF NOT printed_mac_acl.${i.virtualinterfaceid} AND
+      ((NOT i.lagframing) OR (i.lagframing AND NOT i.lagmaster));
+    INCLUDE mac_acl;
+    SET printed_mac_acl.${i.virtualinterfaceid} = 1;
+  END;
+%]
+[% IF mac_acl_only %]
+[% ELSIF i.lagframing %]
+[% IF i.lagmaster %]
+interface [% i.name +%]
+ ! LAG members: [% i.lagmembers.join(' ') +%]
+ description [% i.description +%]
+ switchport access vlan [% vlan_number(i) +%]
+ switchport mode access
+ storm-control broadcast level pps 100
+ storm-control multicast level pps 100
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard enable
+ [% shutdown +%]
+
+[% ELSE %]
+interface [% i.name +%]
+ description [% i.description +%]
+ switchport access vlan [% vlan_number(i) +%]
+ switchport mode access
+ mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+ channel-group [% i.lagindex %] mode active
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard enable
+[% IF i.speed < 10000 %]
+ service-policy output SINGLE-BUFFER
+[% END %]
+ [% shutdown +%]
+
+[% END %]
+[% ELSE %]
+interface [% i.name +%]
+ description [% i.description +%]
+ switchport access vlan [% vlan_number(i) +%]
+ switchport mode access
+ storm-control broadcast level pps 100
+ storm-control multicast level pps 100
+ mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+ spanning-tree bpdufilter enable
+ spanning-tree bpduguard enable
+[% IF i.speed < 10000 %]
+ service-policy output SINGLE-BUFFER
+[% END %]
+ [% shutdown +%]
+
+[% END %]
+[% END %]
+exit
+exit
+
+write memory
+
+! ----8<----------------------------------------------------------------------

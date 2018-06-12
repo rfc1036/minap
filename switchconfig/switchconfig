@@ -1,0 +1,153 @@
+#!/usr/bin/perl
+# vim: shiftwidth=4 tabstop=4
+#
+# Copyright 2018 by Marco d'Itri <md@linux.it>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+use warnings;
+use strict;
+
+use Net::Netrc;
+use HTTP::Tiny;
+use Path::Tiny;
+use Template;
+use JSON::XS;
+
+# This is the IXP Manager API endpoint. Add to your ~/.netrc a section like:
+#
+# machine https://manager.minap.it/api/
+#         password write-your-api-key-here
+#
+my $IXP_Manager_API = 'https://manager.minap.it/api/';
+
+##############################################################################
+{
+	my ($switch, $port) = @ARGV;
+
+	die "Usage: $0 SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]\n"
+		if not $switch or not $port;
+	die "Invalid switch name '$switch'!\n" if $switch !~ /^sw-[a-z]+$/;
+
+	my $cache;
+	#$cache = path("cache-$switch.json");
+	my $l2 = switch_data($switch, $cache);
+	die 'Not enough interfaces' if not @{ $l2->{layer2interfaces} } > 1;
+	#use DDP; p $l2; exit;
+
+	my $ports = find_ports($l2, $port);
+	die "Port '$port' not found on $switch!\n" if not @$ports;
+	#use DDP; p $ports;
+
+	my $template = path('minap-l2.tt2')->slurp_utf8;
+	build_config(\$template, {
+		switch => $switch,
+		ports => $ports,
+		mac_acl_only => 0,
+	});
+
+	exit;
+}
+
+##############################################################################
+sub switch_data {
+	my ($switch, $cache) = @_;
+
+	return decode_json($cache->slurp_utf8) if $cache and $cache->exists;
+
+	my $json = ixpmanager_api("v4/provisioner/layer2interfaces/switch-name/$switch.json");
+
+	$cache->spew_utf8($json) if $cache;
+	return decode_json($json);
+}
+
+sub ixpmanager_api {
+	my ($api) = @_;
+
+	my $url = $IXP_Manager_API . $api;
+
+	my $http = HTTP::Tiny->new(verify_SSL => 1);
+	my $response = $http->get($url, {
+		headers => {
+			'X-IXP-Manager-API-Key' => ixp_manager_api_key($IXP_Manager_API),
+		},
+	});
+	$response->{content} =~ s/\n$// if $response->{status} == 599;
+	die "Could not download $url: "
+			. ($response->{status} == 599 ? $response->{content}
+			: "$response->{status} $response->{reason}") . "!\n"
+		if not $response->{success};
+
+	return $response->{content};
+}
+
+sub find_ports {
+	my ($data, $search) = @_;
+
+	my @ports;
+	foreach my $port (@{ $data->{layer2interfaces} }) {
+		push(@ports, $port)
+			if  ($search =~ /^\d+$/
+					and $port->{name} =~ /^Te1\/0\/$search$/) or
+				($search =~ /^Te(?:nGigabitEthernet)?1\/0\/\d+$/
+					and $port->{name} =~ /^Te1\/0\/$search$/) or
+				($search =~ /^Po(?:rt-channel)?(\d+)$/
+					and $port->{name} =~ /Port-channel${1}$/) or
+				$port->{description} =~ /\Q$search\E/i;
+	}
+
+	return \@ports;
+}
+
+##############################################################################
+sub build_config {
+	my ($text, $vars) = @_;
+	
+	my $template = Template->new(
+		POST_CHOMP => 1,
+		DEBUG_UNDEF => 1,
+		ENCODING => 'utf8',
+	) or die "Template->new: $Template::ERROR";
+
+	$template->process($text, $vars) or die $template->error;
+
+	return;
+}
+
+sub ixp_manager_api_key {
+	my ($url) = @_;
+
+	my $machine = Net::Netrc->lookup($url);
+	die "No password found in .netrc for $url!\n"
+		if not $machine;
+	return $machine->password;
+}
+
+##############################################################################
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+switchconfig - generates configuration fragments from IXP Manager data
+
+=head1 SYNOPSIS
+
+switchconfig SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]
+
+=head1 DESCRIPTION
+
+This program generates the configuration for a customer port using data
+provided by the IXP Manager API.
+
+=head1 AUTHOR
+
+The program and this man page have been written by Marco d'Itri
+L<md@linux.it>.
+
+=cut
+
