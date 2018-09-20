@@ -70,6 +70,8 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
+ storm-control broadcast level pps 100
+ storm-control multicast level pps 100
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
  channel-group [% i.lagindex %] mode active
  spanning-tree bpdufilter enable
