@@ -92,9 +92,7 @@ interface [% i.name +%]
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
  spanning-tree bpdufilter enable
  spanning-tree bpduguard enable
-[% IF i.speed < 10000 %]
  service-policy output SINGLE-BUFFER
-[% END %]
  [% shutdown +%]
 
 [% END %]
