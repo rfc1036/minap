@@ -40,7 +40,7 @@ ul.popdescr span.inactive {
 <ul class="popdescr">
 <li><span class="label">POP name:</span> Infracom</li>
 <li><span class="label">Sponsor:</span> <a href="http://www.metrolink.it/">Consorzio Metrolink</a></li>
-<li><span class="label">Location:</span> <a href="http://www.infracom.it/it/servizi/avalon/">Infracom Italia</a></li>
+<li><span class="label">Location:</span> <a href="https://irideos.it/">Avalon Campus (formerly Infracom)</a></li>
 <li><span class="label">Building:</span> E - ground floor (Avalon Room)</li>
 </ul>
 
@@ -53,8 +53,8 @@ ul.popdescr span.inactive {
 
 <ul class="popdescr">
 <li><span class="label">POP name:</span> Enter</li>
-<li><span class="label">Sponsor:</span> <a href="https://www.enter.it/">Enter</a></li>
-<li><span class="label">Location:</span> <a href="https://www.enter.it/">Enter</a></li>
+<li><span class="label">Sponsor:</span> <a href="https://irideos.it/">Irideos</a></li>
+<li><span class="label">Location:</span> <a href="https://irideos.it/">Avalon Campus (formerly Enter)</a></li>
 <li><span class="label">Building:</span> D - ground floor</li>
 </ul>
 
@@ -66,6 +66,6 @@ Weathermap</a> for detailed information.</p>
 <h2>Remote peering</h2>
 
 <p>Remote peering is available from our partners
-<a href="https://www.enter.it/">Enter</a> and
+<a href="https://irideos.it/">Irideos</a> and
 <a href="https://m247.com/services/ixp/">M247</a>.</p>
 [% END %]
