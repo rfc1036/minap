@@ -17,9 +17,9 @@ div#partners div { padding-bottom: 2em; }
 </div>
 
 <div>
-<a href="https://www.enter.it/">
-<img src="[% site.url.images %]/logo-enter.png" width="257" height="56"
- alt="Enter"></a>
+<a href="https://irideos.it/">
+<img src="[% site.url.images %]/logo-irideos.png" width="272" height="70"
+ alt="IRIDEOS"></a>
 </div>
 
 <div>
