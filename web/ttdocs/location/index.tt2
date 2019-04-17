@@ -28,7 +28,6 @@ ul.popdescr span.inactive {
 <li><span class="label">Sponsor:</span> <a href="https://www.seeweb.it/">Seeweb</a></li>
 <li><span class="label">Location:</span> <a href="https://www.seeweb.it/">Seeweb</a></li>
 <li><span class="label">Building:</span> piastra B - ground floor</li>
-<li><span class="label">POP Status:</span> <span class="active">Active</span></li>
 </ul>
 
 <ul class="popdescr">
@@ -36,7 +35,6 @@ ul.popdescr span.inactive {
 <li><span class="label">Sponsor:</span> <a href="https://www.telnet.it/">Telnet</a></li>
 <li><span class="label">Location:</span> <a href="https://www.telnet.it/">Telnet</a></li>
 <li><span class="label">Building:</span> F - first floor</li>
-<li><span class="label">POP Status:</span> <span class="active">Active</span></li>
 </ul>
 
 <ul class="popdescr">
@@ -44,7 +42,6 @@ ul.popdescr span.inactive {
 <li><span class="label">Sponsor:</span> <a href="http://www.metrolink.it/">Consorzio Metrolink</a></li>
 <li><span class="label">Location:</span> <a href="http://www.infracom.it/it/servizi/avalon/">Infracom Italia</a></li>
 <li><span class="label">Building:</span> E - ground floor (Avalon Room)</li>
-<li><span class="label">POP Status:</span> <span class="active">Active</span></li>
 </ul>
 
 <ul class="popdescr">
@@ -52,7 +49,6 @@ ul.popdescr span.inactive {
 <li><span class="label">Sponsor:</span> <a href="https://www.cdlan.it/">CDLAN</a></li>
 <li><span class="label">Location:</span> <a href="https://www.cdlan.it/">CDLAN</a></li>
 <li><span class="label">Building:</span> piastra E - first floor</li>
-<li><span class="label">POP Status:</span> <span class="active">Active</span></li>
 </ul>
 
 <ul class="popdescr">
@@ -60,7 +56,6 @@ ul.popdescr span.inactive {
 <li><span class="label">Sponsor:</span> <a href="https://www.enter.it/">Enter</a></li>
 <li><span class="label">Location:</span> <a href="https://www.enter.it/">Enter</a></li>
 <li><span class="label">Building:</span> D - ground floor</li>
-<li><span class="label">POP Status:</span> <span class="active">Active</span></li>
 </ul>
 
 <h2>Topology</h2>
