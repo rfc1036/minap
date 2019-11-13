@@ -18,6 +18,10 @@ peering or transit over the MINAP infrastructure.</p>
 MINAP connected interfaces must only use the IP addresses and netmasks
 (prefix lengths) assigned to them by MINAP.</p>
 
+<p>The MINAP route servers implement a strict filtering policy using
+prefix-lists generated from IRR data and RPKI validation. Only prefixes
+with a corresponding route or route6 object or a valid ROA are accepted.</p>
+
 <p>Each member is physically connected to the MINAP switch via a dedicated
 cable. Cable sharing is not allowed and only one MAC address is authorised per
 member port. Members shall not connect intermediate layer 2 devices between the
