@@ -24,7 +24,7 @@ our <a href="[% site.url.root %]/policy/">policy</a> section before applying.
 <li>IRR AS macro (as-set), if any.</li>
 <li>Details of your peering policy, if it is not open.</li>
 <li>The MINAP PoP you plan to connect to.</li>
-<li>The speed of the port that you will connect (GE or 10GE).</li>
+<li>The speed of the port that you will connect (GE, 10GE, 40GE or 100GE).</li>
 </ul>
 
 <p>MINAP is a "bring your own optics" internet exchange: please arrange
