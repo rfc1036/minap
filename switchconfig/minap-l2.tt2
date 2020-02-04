@@ -37,7 +37,7 @@ mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
 
 [% END %]
 
- clogin [% switch %].minap.it
+ ssh [% switch %].minap.it
 
 ! Please cut and paste:
 ! ----8<----------------------------------------------------------------------
