@@ -36,6 +36,7 @@ mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
  deny   host 0000.0000.0000 host 0000.0000.0000
 
 [% END %]
+[%# USE Dumper; Dumper.dump(ports) %]
 
  ssh [% switch %].minap.it
 
@@ -54,6 +55,7 @@ configure terminal
 [% IF mac_acl_only %]
 [% ELSIF i.lagframing %]
 [% IF i.lagmaster %]
+[%# a LAG interface %]
 interface [% i.name +%]
  ! LAG members: [% i.lagmembers.join(' ') +%]
  description [% i.description +%]
@@ -66,6 +68,7 @@ interface [% i.name +%]
  [% shutdown +%]
 
 [% ELSE %]
+[%# an interface which is a LAG member %]
 interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
@@ -83,6 +86,7 @@ interface [% i.name +%]
 
 [% END %]
 [% ELSE %]
+[%# an interface which is not a LAG member %]
 interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
