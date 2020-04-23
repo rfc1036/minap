@@ -47,6 +47,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 		switch => $switch,
 		ports => $ports,
 		mac_acl_only => 0,
+		port_security => 1,
 	});
 
 	exit;

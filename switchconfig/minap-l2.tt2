@@ -91,6 +91,15 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
+[% IF port_security %]
+ switchport port-security violation protect
+[% FOREACH vlan = i.vlans %]
+[% FOREACH mac = vlan.macaddresses.sort %]
+ switchport port-security mac-address [% mac +%]
+[% END %]
+[% END %]
+ switchport port-security
+[% END %]
  storm-control broadcast level pps 100
  storm-control multicast level pps 100
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
