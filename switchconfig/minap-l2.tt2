@@ -29,9 +29,9 @@ mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
  permit host [% address %] host 0000.0000.0000 0x806 0x0
  permit host [% address %] host 0000.0000.0000 0x800 0x0
  permit host [% address %] host 0000.0000.0000 0x8DD 0x0
+[% END %]
 [% IF i.lagframing %]
  permit host 0000.0000.0000 host 01:80:c2:00:00:02 0x8809 0x0
-[% END %]
 [% END %]
  deny   host 0000.0000.0000 host 0000.0000.0000
 
