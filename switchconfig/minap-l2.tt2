@@ -73,6 +73,9 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
+[% IF i.name.match('^Hu') %]
+ enable
+[% END %]
  storm-control broadcast level pps 100
  storm-control multicast level pps 100
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
