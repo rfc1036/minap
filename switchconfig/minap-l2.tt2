@@ -94,7 +94,7 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
-[% IF port_security %]
+[% IF port_security AND i.status != 'quarantine' %]
  switchport port-security violation protect
 [% FOREACH vlan = i.vlans %]
 [% IF vlan.macaddresses.size %]
@@ -106,6 +106,9 @@ interface [% i.name +%]
 [% END %]
 [% END %]
  switchport port-security
+[% ELSE %]
+ no switchport port-security mac-address
+ no switchport port-security
 [% END %]
  storm-control broadcast level pps 100
  storm-control multicast level pps 100
