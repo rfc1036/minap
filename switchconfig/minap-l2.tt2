@@ -119,6 +119,9 @@ interface [% i.name +%]
  no switchport port-security mac-address
  no switchport port-security
 [% END %]
+[% IF i.name.match('^Hu') %]
+ enable
+[% END %]
 [% PROCESS storm_control %]
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
  spanning-tree bpdufilter enable
