@@ -17,23 +17,25 @@
 [% BLOCK mac_acl %]
 [%
   THROW 'No VLANs defined for the port' IF NOT i.vlans.size;
-
-  # accept all MACs if none is configured
-  SET i.vlans.0.macaddresses.0 = '0000.0000.0000'
-    IF NOT i.vlans.0.macaddresses.0;
 %]
 no mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
 mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
- deny   host 0000.0000.0000 host dead.beef.0666
+ deny   any host dead.beef.0666
+[% IF i.vlans.0.macaddresses.size > 0 %]
 [% FOREACH address = i.vlans.0.macaddresses %]
- permit host [% address %] host 0000.0000.0000 0x806 0x0
- permit host [% address %] host 0000.0000.0000 0x800 0x0
- permit host [% address %] host 0000.0000.0000 0x8DD 0x0
+ permit host [% address %] any 0x806 0x0
+ permit host [% address %] any 0x800 0x0
+ permit host [% address %] any 0x8DD 0x0
+[% END %]
+[% ELSE %]
+ permit any any 0x806 0x0
+ permit any any 0x800 0x0
+ permit any any 0x8DD 0x0
 [% END %]
 [% IF i.lagframing %]
- permit host 0000.0000.0000 host 01:80:c2:00:00:02 0x8809 0x0
+ permit any host 01:80:c2:00:00:02 0x8809 0x0
 [% END %]
- deny   host 0000.0000.0000 host 0000.0000.0000
+ deny   any any
 
 [% END %]
 [%# USE Dumper; Dumper.dump(ports) %]
