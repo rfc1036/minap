@@ -55,6 +55,13 @@ mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
 ! ----8<----------------------------------------------------------------------
 configure terminal
 
+! Ports MUST be flapped when their MAC address changes or they are
+! being moved in or out of quarantine.
+[% FOREACH i = ports %]
+interface [% i.name +%]
+ shutdown
+[% END %]
+
 [% FOREACH i = ports %]
 [%
   IF NOT printed_mac_acl.${i.virtualinterfaceid} AND
