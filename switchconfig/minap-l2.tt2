@@ -30,7 +30,7 @@
 no mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
 mac access-list extended MEMBER[% i.virtualinterfaceid %]-IN
  deny   any host dead.beef.0666
-[% IF i.vlans.0.macaddresses.size > 0 %]
+[% IF i.vlans.0.macaddresses.size > 0 AND i.status != 'quarantine' %]
 [% FOREACH address = i.vlans.0.macaddresses %]
  permit host [% address %] any 0x806 0x0
  permit host [% address %] any 0x800 0x0
