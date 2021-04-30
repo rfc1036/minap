@@ -61,6 +61,14 @@ footer > div, footer > div > a {
     </div>
 
     <div id="sidebar" class="col-sm-4 mt-5">
+[% IF page.show_traffic %]
+      <div id="news" class="p-3 mb-5 shadow rounded">
+        <h2>Traffic</h2>
+        <a href="https://manager.minap.it/statistics/ixp">
+          <img src="https://manager.minap.it/grapher/ixp" class="img-fluid" alt="traffic graph">
+        </a>
+      </div>
+[% END %]
       <div id="news" class="p-3 mb-5 shadow rounded">
         <h2>News</h2>
 [% PROCESS inc/news.html %]

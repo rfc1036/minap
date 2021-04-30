@@ -1,6 +1,7 @@
 [%
   page.title = 'Milan Neutral Access Point';
   page.noaddtitle = 1;
+  page.show_traffic = 1;
 %]
 [% WRAPPER htmlpage %]
 <p>MINAP is a distributed
