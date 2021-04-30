@@ -62,7 +62,7 @@ sub members_from_ixf {
 		@{ $ixf->{ixp_list}->[0]->{switch} };
 
 	# rewrite the names of the Irideos data centers because they are too long
-	$switch2pop{$_} =~ s#^IRIDEOS Avalon Campus \((.+)\)$#IRIDEOS/$1#
+	$switch2pop{$_} =~ s#^IRIDEOS Avalon Campus \((.+)\)$#IRIDEOS ($1)#
 		foreach keys %switch2pop;
 
 	my %rs_limited = map { $_ => 1 } @{ $config->{rs_limited} };
