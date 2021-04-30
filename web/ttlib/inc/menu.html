@@ -1,11 +1,47 @@
-<img src="[% site.url.images %]/logo.png" alt="">
-<div id="menubar">
-  <a href="[% site.url.root %]/">Home</a> |
-  <a href="[% site.url.root %]/services/">Services</a> |
-  <a href="[% site.url.root %]/location/">PoPs</a> |
-  <a href="[% site.url.root %]/apply/">Join</a> |
-  <a href="[% site.url.root %]/members/">Members</a> |
-  <a href="[% site.url.root %]/partners/">Partners</a> |
-  <a href="[% site.url.root %]/contacts/">About</a> |
-  <a href="https://manager.minap.it/"><img src="[% site.url.images %]/Lock.gif" alt="User Area"></a>
-</div>
+[% MACRO link_attributes(name) BLOCK %]
+[% IF name == page.nav_active_link %]
+class="nav-link active" aria-current="page"
+[%- ELSE %]
+class="nav-link"
+[%- END %]
+[% END %]
+<nav class="navbar sticky-top navbar-expand-md navbar-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button"
+     data-bs-toggle="collapse" data-bs-target="#navbar1"
+     aria-controls="navbar1" aria-expanded="false"
+     aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar1">
+      <a class="navbar-brand" href="[% site.url.root %]/">
+        <img src="[% site.url.images %]/minap.svg" alt=""
+         height="25" class="d-inline-block">
+        MINAP
+      </a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a [% link_attributes('services') %] href="[% site.url.root %]/services/">Services</a>
+        </li>
+        <li class="nav-item">
+          <a [% link_attributes('location') %] href="[% site.url.root %]/location/">Locations</a>
+        </li>
+        <li class="nav-item">
+          <a [% link_attributes('apply') %] href="[% site.url.root %]/apply/">Join</a>
+        </li>
+        <li class="nav-item">
+          <a [% link_attributes('members') %] href="[% site.url.root %]/members/">Members</a>
+        </li>
+        <li class="nav-item">
+          <a [% link_attributes('partners') %] href="[% site.url.root %]/partners/">Partners</a>
+        </li>
+        <li class="nav-item">
+          <a [% link_attributes('ixp-manager') %] href="https://manager.minap.it/">IXP Manager</a>
+        </li>
+        <li class="nav-item">
+          <a [% link_attributes('contacts') %] href="[% site.url.root %]/contacts/">Contacts</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

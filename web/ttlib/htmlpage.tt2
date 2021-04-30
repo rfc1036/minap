@@ -3,62 +3,88 @@
 
   site.url = {
     root   = "${root_prefix}"
-    styles = "${root_prefix}/css/minap-yui"
+    styles = "${root_prefix}/lib"
     images = "${root_prefix}/images"
   };
 %]
 [% BLOCK htmlpage %]
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
- "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Milan Neutral Access Point[% ': ' _ page.title | html IF page.title %]</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="[% site.url.styles %]/reset-fonts-grids.css" type="text/css">
-  <link rel="stylesheet" href="[% site.url.styles %]/style.css" type="text/css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Milan Neutral Access Point[% ': ' _ page.title | html IF NOT page.noaddtitle %]</title>
+
+  <link href="[% site.url.styles %]/bootstrap.min.css" rel="stylesheet">
 [% IF page.css %]
-  <style type="text/css">
+
+  <style>
 [% page.css %]
   </style>
 [% END %]
 [% IF page.script %]
+
   <script type="text/javascript">
 [% page.script %]
   </script>
 [% END %]
+
+<style>
+body > nav {
+  background-color: rgb(125, 165, 224);
+}
+h1, h2 {
+  color: rgb(125, 165, 224);
+  font-weight: bolder;
+}
+footer > div, footer > div > a {
+  color: white;
+  background-color: rgb(125, 165, 224);
+}
+</style>
+
 </head>
 <body>
-[% IF page.nosidebar %]
-<div id="doc" class="yui-t7">
-[% ELSE %]
-[%# <div id="doc" class="yui-t2"> %]
-<div id="doc" class="yui-t5">
-[% END %]
-	<div id="hd">
+
 [% PROCESS inc/menu.html %]
-	</div>
-	<div id="bd">
-		<div id="yui-main">
-		<div class="yui-b">
-		<div class="yui-g">
-[% content %]
-		</div>
-		</div>
-		</div>
-		<div class="yui-b">
+
+<div class="container mt-5">
+
 [% IF page.nosidebar %]
-[% ELSIF page.userarea %]
-[% PROCESS 'inc/sections-userarea.html' %]
+[% content %]
 [% ELSE %]
+  <div class="row">
+    <div class="col-sm-8">
+      <h1 class="text-center">[% page.title | html %]</h1>
+[% content %]
+    </div>
+
+    <div id="sidebar" class="col-sm-4 mt-5">
+      <div id="news" class="p-3 mb-5 shadow rounded">
+        <h2>News</h2>
 [% PROCESS inc/news.html %]
+      </div>
+      <div id="partners" class="p-3 mb-5 shadow rounded">
+        <h2>Partners</h2>
 [% PROCESS inc/partners.html %]
+      </div>
+    </div>
+
+  </div>
 [% END %]
-		</div>
-	</div>
-	<div id="ft">
-		<p><a href="mailto:info@minap.it">MINAP - Milan Neutral Access Point</a> - <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a></p>
-	</div>
+
+<footer class="bg-light">
+  <div class="text-center p-2 rounded-pill">
+    <a href="mailto:info@minap.it">MINAP - Milan Neutral Access Point</a> -
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+  </div>
+</footer>
+
 </div>
+
+<script src="[% site.url.styles %]/popper.min.js"></script>
+<script src="[% site.url.styles %]/bootstrap.min.js"></script>
 </body>
 </html>
 [% END %]
