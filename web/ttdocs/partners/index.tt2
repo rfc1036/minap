@@ -1,14 +1,13 @@
 [%
   page.title = 'Partners';
+  page.nav_active_link = 'partners';
 %]
 [% page.css = BLOCK %]
-div#partners { text-align: center; }
-div#partners div { padding-bottom: 2em; }
+div#partners_logos { text-align: center; }
+div#partners_logos div { padding-bottom: 2em; }
 [% END %]
 [% WRAPPER htmlpage %]
-<h1>[% page.title %]</h1>
-
-<div id="partners">
+<div id="partners_logos">
 
 <div>
 <a href="https://www.caldera21.com/">
@@ -53,5 +52,4 @@ div#partners div { padding-bottom: 2em; }
 </div>
 
 </div>
-
 [% END %]

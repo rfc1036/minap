@@ -1,9 +1,8 @@
 [%
   page.title = 'Application Form';
+  page.nav_active_link = 'apply';
 %]
 [% WRAPPER htmlpage %]
-<h1>[% page.title %]</h1>
-
 <p>
 To join MINAP you need to provide the following information to our NOC.
 MINAP staff reserves the right to reject any request. Please have a look at
@@ -15,7 +14,7 @@ our <a href="[% site.url.root %]/policy/">policy</a> section before applying.
 <a href="mailto:noc@minap.it">noc@minap.it</a>:</strong>
 </p>
 
-<ul class="bulleted">
+<ul>
 <li>Organization name.</li>
 <li>Web site.</li>
 <li>NOC contacts.</li>

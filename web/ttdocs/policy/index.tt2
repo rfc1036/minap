@@ -1,13 +1,8 @@
 [%
   page.title = 'Usage Policy';
+  page.nav_active_link = 'policy';
 %]
-[% page.css = BLOCK %]
-[% END %]
 [% WRAPPER htmlpage %]
-<h1>[% page.title %]</h1>
-
-<div id="policy">
-
 <p>
 Each member must have a valid non private ASN (Autonomous System Number), use
 BGP version 4 for peerings and provide a 24x7 operational contact.</p>
@@ -47,7 +42,4 @@ technical problems to the MINAP infrastructure or to other members.</li>
 <li>If MINAP receives an autoritative request or desires to comply with a statutory obligation.</li>
 <li>If maintenance is required.</li>
 </ul>
-
-</div>
-
 [% END %]

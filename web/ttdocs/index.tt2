@@ -1,23 +1,15 @@
 [%
-  #page.title = 'MINAP';
+  page.title = 'Milan Neutral Access Point';
+  page.noaddtitle = 1;
 %]
 [% WRAPPER htmlpage %]
-<h1>Milan Neutral Access Point</h1>
 <p>MINAP is a distributed
 <a href="https://en.wikipedia.org/wiki/Internet_exchange_point">Internet
-Exchange Point</a>
-established in 2008 in Milano in the Via Caldera 21 campus.
-The goal of the MINAP project is to provide fast interconnections among
-members at no cost in order to improve latency and redundancy while
-reducing transit costs. Small companies are, in fact, generally penalized
-by the high costs imposed by commercial Network Access Points that have
-monthly or yearly subscription fees.</p>
+Exchange Point</a> established in 2008 in Milano in the
+<a href="https://www.calderapark.com/caldera-map">Via Caldera 21</a>
+campus.</p>
 
-<p>Have a look to our points of presence section for
-a detailed overview of the MINAP presence.</p>
-
-<p>MINAP is a managed layer 2 facility providing a peering VLAN for
-IPv4 and IPv6 traffic.
-The 24/7 support by MINAP staff enables members to receive immediate
-help in solving technical issues.</p>
+<p>The goal of the MINAP project is to provide no-cost ports in the
+campus on a <a href="[% site.url.root %]/location/">physically diverse
+peering fabric</a> while maintaining technical excellence.</p>
 [% END %]

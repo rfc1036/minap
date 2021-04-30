@@ -1,14 +1,11 @@
 [%
   page.title = 'Network Weathermap';
+  page.nav_active_link = 'network';
   page.nosidebar = 1
 %]
 [% WRAPPER htmlpage %]
-<h1>[% page.title %]</h1>
-
 <iframe src="https://manager.minap.it/weathermap/weathermap.html"
-  frameborder="0"
-  scrolling="no"
-  width="100%"
+  width="1010"
   height="680"
   style="margin: 0; padding: 0; margin-left: auto; margin-right: auto;"
 ></iframe>

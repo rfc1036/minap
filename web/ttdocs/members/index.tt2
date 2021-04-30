@@ -1,14 +1,18 @@
 [%
   page.title = 'Members List';
+  page.nav_active_link = 'members';
   page.nosidebar = 1
 %]
 [% WRAPPER htmlpage %]
-<h1>[% page.title %]</h1>
-
+<div class="row">
+  <h1 class="text-center">[% page.title %]</h1>
 [% PROCESS inc/members.html %]
+</div>
+<div class="row">
 
 <p>The list of members is also available as a
 <a href="/members.json">JSON document in IX-F format</a>.</p>
 
 <p>Route servers peers marked with a * only announce a subset of their routes to the routes servers: their peers are advised to establish direct BGP sessions.</p>
+</div>
 [% END %]

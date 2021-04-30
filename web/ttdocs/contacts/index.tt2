@@ -1,9 +1,8 @@
 [%
   page.title = 'Contacts';
+  page.nav_active_link = 'contacts';
 %]
 [% WRAPPER htmlpage %]
-<h1>[% page.title %]</h1>
-
 <p>MINAP is not a legal entity: all the parts that together make the
 MINAP infrastructure are operated by the MINAP NOC but still owned by
 the respective <a href="[% site.url.root %]/partners/">sponsors</a>.</p>
@@ -21,7 +20,7 @@ c/o Telnet s.r.l.<br>
 </address>
 
 <ul style="margin-top: 2em">
-<li><strong>Technical support:</strong> <a href="mailto:support@minap.it">support@minap.it</a></li>
+<li><strong>Technical support:</strong> <a href="mailto:noc@minap.it">noc@minap.it</a></li>
 <li><strong>General information:</strong> <a href="mailto:info@minap.it">info@minap.it</a></li>
 </ul>
 [% END %]
