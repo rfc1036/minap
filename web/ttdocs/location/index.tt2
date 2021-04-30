@@ -10,17 +10,9 @@ ul.popdescr {
 ul.popdescr span.label {
   font-weight: bold;
 }
-ul.popdescr span.active {
-  color: green;
-  font-weight: bold;
-}
-ul.popdescr span.inactive {
-  color: red;
-  font-weight: bold;
-}
 [% END %]
 [% WRAPPER htmlpage %]
-<h2>Core sites</h2>
+<h2>Sites</h2>
 
 <ul class="popdescr">
 <li><span class="label">POP name:</span> Seeweb</li>
@@ -59,12 +51,11 @@ ul.popdescr span.inactive {
 
 <h2>Topology</h2>
 <p>Please consult our
-<a href="https://manager.minap.it/weathermap/weathermap.html">Network
+<a href="[% site.url.root %]/network/">Network
 Weathermap</a> for detailed information.</p>
 
 <h2>Remote peering</h2>
 
-<p>Remote peering is available from our partners
-<a href="https://irideos.it/">IRIDEOS</a> and
-<a href="https://m247.com/services/ixp/">M247</a>.</p>
+<p>Remote peering is available from
+<a href="https://www.fibertelecom.com/">Fiber Telecom</a>.</p>
 [% END %]

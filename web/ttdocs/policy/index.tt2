@@ -10,18 +10,16 @@ BGP version 4 for peerings and provide a 24x7 operational contact.</p>
 peering or transit over the MINAP infrastructure.</p>
 
 <p>Members shall not give transit to the address space of the peering LAN.
-MINAP connected interfaces must only use the IP addresses and netmasks
+The peering ports must use only the IP addresses and netmasks
 (prefix lengths) assigned to them by MINAP.</p>
 
-<p>The MINAP route servers implement a strict filtering policy using
+<p>The <a href="https://manager.minap.it/public-content/rs">MINAP route servers</a> implement a strict filtering policy using
 prefix-lists generated from IRR data and RPKI validation. Only prefixes
 with a corresponding route or route6 object or a valid ROA are accepted.</p>
 
 <p>Each member is physically connected to the MINAP switch via a dedicated
 cable. Cable sharing is not allowed and only one MAC address is authorised per
-member port. Members shall not connect intermediate layer 2 devices between the
-MINAP switch and their peering router unless preventively approved by the MINAP
-NOC.</p>
+member port.</p>
 
 <p>Features and link-local protocols like, but not limited to: Proxy ARP, ICMP
 redirects, the Spanning Tree Protocol, IGMP, CDP, VTP, LLDP, OSFP, PIM and

@@ -48,7 +48,7 @@ div#partners_logos div { padding-bottom: 2em; }
 <div>
 <a href="https://www.twt.it/">
 <img src="[% site.url.images %]/logo-twt.png" width="211" height="67"
- alt="Telnet"></a>
+ alt="TWT"></a>
 </div>
 
 </div>

@@ -27,6 +27,6 @@ our <a href="[% site.url.root %]/policy/">policy</a> section before applying.
 </ul>
 
 <p>MINAP is a "bring your own optics" internet exchange: please arrange
-for delivery of an SFP or SFP+ to the operator of the PoP you will
-connect to.</p>
+for delivery of an SFP+, QSFP+ or QSFP28 pluggable to the operator
+of the PoP you will connect to.</p>
 [% END %]
