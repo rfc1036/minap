@@ -31,10 +31,10 @@
 [% END %]
 
 <style>
-body > nav {
+body > nav, div.modal-footer > button {
   background-color: rgb(125, 165, 224);
 }
-h1, h2 {
+h1, h2, h3, h4, h5 {
   color: rgb(125, 165, 224);
   font-weight: bolder;
 }
