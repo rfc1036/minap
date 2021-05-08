@@ -1,4 +1,71 @@
-<a href="https://manager.minap.it/statistics/ixp">
+<a href="https://manager.minap.it/statistics/ixp" id="gallery"
+   data-bs-toggle="modal" data-bs-target="#trafficmodal">
   <img class="img-fluid" src="https://manager.minap.it/grapher/ixp"
-       alt="Traffic graph">
+       alt="Traffic graph" data-target="#trafficcarousel" data-slide-to="0">
 </a>
+
+<div class="modal fade" id="trafficmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="staticBackdropLabel">MINAP traffic</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="carousel slide" id="trafficcarousel"
+             data-bs-ride="carousel" data-bs-interval="false">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#trafficcarousel"
+                    class="active" aria-current="true"
+                    data-bs-slide-to="0" aria-label="Day"></button>
+            <button type="button" data-bs-target="#trafficcarousel"
+                    data-bs-slide-to="1" aria-label="Week"></button>
+            <button type="button" data-bs-target="#trafficcarousel"
+                    data-bs-slide-to="2" aria-label="Month"></button>
+            <button type="button" data-bs-target="#trafficcarousel"
+                    data-bs-slide-to="3" aria-label="Year"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <h5>Day</h5>
+              <img class="d-block w-100" loading="lazy"
+                   src="https://manager.minap.it/grapher/ixp?id=1&amp;type=png&amp;period=day"
+                   alt="Traffic for the last day">
+            </div>
+            <div class="carousel-item">
+              <h5>Week</h5>
+              <img class="d-block w-100" loading="lazy"
+                   src="https://manager.minap.it/grapher/ixp?id=1&amp;type=png&amp;period=week"
+                   alt="Traffic for the last week">
+            </div>
+            <div class="carousel-item">
+              <h5>Month</h5>
+              <img class="d-block w-100" loading="lazy"
+                   src="https://manager.minap.it/grapher/ixp?id=1&amp;type=png&amp;period=month"
+                   alt="Traffic for the last month">
+            </div>
+            <div class="carousel-item">
+              <h5>Year</h5>
+              <img class="d-block w-100" loading="lazy"
+                   src="https://manager.minap.it/grapher/ixp?id=1&amp;type=png&amp;period=year"
+                   alt="Traffic for the last year">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button"
+                data-bs-target="#trafficcarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button"
+                data-bs-target="#trafficcarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
