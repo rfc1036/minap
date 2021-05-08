@@ -1,0 +1,13 @@
+[%
+  page.news_current_year = template.name.match('/(\d+)\.tt2$').first;
+  page.title = 'Updates for ' _ page.news_current_year;
+%]
+[% WRAPPER htmlpage %]
+[%# https://rawgit.com/fletcher/MultiMarkdown-6-Syntax-Guide/master/index.html %]
+[% USE MultiMarkdown %]
+[% FILTER multimarkdown(empty_element_suffix => '>', img_ids => 0, heading_ids = 0, tab_width => 2) %]
+[% PROCESS "news/${page.news_current_year}.md" %]
+[% END %]
+
+[% PROCESS inc/news_nav.html %]
+[% END %]
