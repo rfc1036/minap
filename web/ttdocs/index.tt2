@@ -13,4 +13,9 @@ campus.</p>
 <p>The goal of the MINAP project is to provide no-cost ports in the
 campus on a <a href="[% site.url.root %]/location/">physically diverse
 peering fabric</a> while maintaining technical excellence.</p>
+
+<p>MINAP provides free of charge to its members gigabit, 10 gigabit,
+40 gigabit or 100 gigabit Ethernet ports, access to the
+<a href="https://manager.minap.it/">members portal</a> and support
+by the MINAP NOC.</p>
 [% END %]

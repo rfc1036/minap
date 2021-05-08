@@ -10,7 +10,7 @@ our <a href="[% site.url.root %]/policy/">policy</a> section before applying.
 </p>
 
 <p>
-<strong>The following information must be provided to
+<strong>The following information must be sent to
 <a href="mailto:noc@minap.it">noc@minap.it</a>:</strong>
 </p>
 
@@ -25,6 +25,11 @@ our <a href="[% site.url.root %]/policy/">policy</a> section before applying.
 <li>The MINAP PoP you plan to connect to.</li>
 <li>The speed of the port that you will connect (GE, 10GE, 40GE or 100GE).</li>
 </ul>
+
+<p>MINAP does not provide colocation for your network equipment
+nor the cross-connect between your router and the MINAP switch.
+But if you are new to the Via Caldera campus then we can introduce you
+to our partners data centers.</p>
 
 <p>MINAP is a "bring your own optics" internet exchange: please arrange
 for delivery of an SFP+, QSFP+ or QSFP28 pluggable to the operator
