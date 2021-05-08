@@ -42,6 +42,8 @@ footer > div, footer > div > a {
   color: white;
   background-color: rgb(125, 165, 224);
 }
+.nav-item { padding: 0 0.3em; }
+.nav-link { font-weight: bold; }
 </style>
 
 </head>
