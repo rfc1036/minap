@@ -17,12 +17,6 @@
   <title>Milan Neutral Access Point[% ': ' _ page.title | html IF NOT page.noaddtitle %]</title>
 
   <link href="[% site.url.styles %]/bootstrap.min.css" rel="stylesheet">
-[% IF page.css %]
-
-  <style>
-[% page.css %]
-  </style>
-[% END %]
 [% IF page.script %]
 
   <script type="text/javascript">
@@ -44,6 +38,9 @@ footer > div, footer > div > a {
 }
 .nav-item { padding: 0 0.3em; }
 .nav-link { font-weight: bold; }
+[% IF page.css %]
+[% page.css %]
+[% END %]
 </style>
 
 </head>
