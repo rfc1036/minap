@@ -1,5 +1,6 @@
 [%
   page.title = 'Points of Presence';
+  page.description = 'The data centers where MINAP is located.';
   page.nav_active_link = 'location';
 %]
 [% page.css = BLOCK %]

@@ -1,5 +1,6 @@
 [%
   page.title = 'Contacts';
+  page.description = 'Contacts for MINAP.';
   page.nav_active_link = 'contacts';
 %]
 [% WRAPPER htmlpage %]

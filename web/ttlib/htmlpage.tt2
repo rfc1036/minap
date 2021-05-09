@@ -1,4 +1,5 @@
 [%
+  domain = "https://www.minap.it"
   #root_prefix = '/minap';
 
   site.url = {
@@ -13,8 +14,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta property="og:type" content="article">
+  <meta property="og:title" content="[% (page.og.title || 'MINAP: ' _ page.title) | html %]">
+[% IF page.og.description || page.description %]
+  <meta property="og:description" content="[% (page.og.description || page.description ) | html %]">
+[% END %]
+  <meta property="og:site_name" content="MINAP">
+  <meta property="og:url" content="[% domain _ site.url.root %]/[% template.name.replace('\.tt2$', '.html').replace('index\.html$', '') %]">
+  <meta property="og:image" content="[% domain _ site.url.images %]/[% page.og.image || 'logo2.png' %]">
+  <meta name="twitter:card" content="summary">
 
   <title>Milan Neutral Access Point[% ': ' _ page.title | html IF NOT page.noaddtitle %]</title>
+[% IF page.description %]
+  <meta name="description" content="[% page.description | html %]">
+[% END %]
 
   <link href="[% site.url.styles %]/bootstrap.min.css" rel="stylesheet">
 [% IF page.script %]

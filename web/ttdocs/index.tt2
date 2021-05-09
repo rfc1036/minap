@@ -1,5 +1,6 @@
 [%
   page.title = 'Milan Neutral Access Point';
+  page.description = 'MINAP is a distributed and free of charge Internet Exchange Point in the Via Caldera 21 campus in Milano.';
   page.noaddtitle = 1;
   page.show_traffic = 1;
 %]

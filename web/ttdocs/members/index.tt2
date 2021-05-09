@@ -1,5 +1,6 @@
 [%
   page.title = 'Members List';
+  page.description = 'The list of networks connected to MINAP.';
   page.nav_active_link = 'members';
   page.nosidebar = 1
 %]

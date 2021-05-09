@@ -1,5 +1,6 @@
 [%
   page.title = 'Network Weathermap';
+  page.description = 'Real time traffic graphs for the MINAP infrastructure.';
   page.nav_active_link = 'network';
   page.nosidebar = 1
 %]

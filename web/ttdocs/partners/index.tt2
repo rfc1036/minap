@@ -1,5 +1,6 @@
 [%
   page.title = 'Partners';
+  page.description = 'The list of companies which have contributed to MINAP.';
   page.nav_active_link = 'partners';
 %]
 [% page.css = BLOCK %]

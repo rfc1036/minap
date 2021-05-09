@@ -1,5 +1,6 @@
 [%
   page.title = 'Application Form';
+  page.description = 'How to join MINAP.'
   page.nav_active_link = 'apply';
 %]
 [% WRAPPER htmlpage %]

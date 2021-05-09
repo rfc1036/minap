@@ -1,6 +1,7 @@
 [%
   page.news_current_year = template.name.match('/(\d+)\.tt2$').first;
   page.title = 'Updates for ' _ page.news_current_year;
+  page.description = 'The news about MINAP in ' _ page.news_current_year _ '.';
 %]
 [% WRAPPER htmlpage %]
 [%# https://rawgit.com/fletcher/MultiMarkdown-6-Syntax-Guide/master/index.html %]

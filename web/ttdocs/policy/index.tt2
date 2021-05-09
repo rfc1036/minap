@@ -1,5 +1,6 @@
 [%
   page.title = 'Usage Policy';
+  page.description = 'The technical policies of MINAP.';
   page.nav_active_link = 'policy';
 %]
 [% WRAPPER htmlpage %]
