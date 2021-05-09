@@ -1,0 +1,6 @@
+[Match]
+Name=vb-as112-ixp
+
+[Network]
+Description=Host side of ixp in the as112 container
+Bridge=br865

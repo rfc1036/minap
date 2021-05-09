@@ -1,0 +1,18 @@
+$TTL 5M
+@	IN	SOA	as112.minap.it. md.linux.it. (
+					1	; serial number
+					1W	; refresh
+					1M	; retry
+					1W	; expire
+					1W )	; negative caching TTL
+
+		NS	blackhole-1.iana.org.
+		NS	blackhole-2.iana.org.
+
+		TXT	"MINAP" "Milano, IT"
+		TXT	"See http://www.as112.net/ for more information."
+		TXT	"Unique IP: 185.1.114.112"
+		TXT	"Unique IP: 2001:7f8:c5::112"
+
+		LOC	45 28 40 N 9 6 16 E 0
+

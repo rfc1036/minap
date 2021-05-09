@@ -1,0 +1,42 @@
+- hosts: as112_hosts
+  gather_facts: no
+  vars:
+    container_name: as112
+
+  tasks:
+  - name: Create the container with debootstrap
+    command:
+      chdir: /var/lib/machines/
+      cmd: >-
+        debootstrap --variant=minbase
+        --include=dbus,libpam-systemd,python3,ifupdown,procps
+        --exclude=e2fsprogs
+        bullseye {{container_name}}
+        http://debian.seeweb.it/debian/
+      creates: /var/lib/machines/{{container_name}}/
+
+  - name: Configure the container hostname
+    copy:
+      dest: /var/lib/machines/{{container_name}}/etc/hostname
+      content: "{{container_name}}.minap.it\n"
+
+  - name: Configure the network
+    copy: src=network-host/ dest=/etc/systemd/network/
+    notify: Restart systemd-networkd
+
+  - name: Create the directories
+    file: state=directory path={{item.path}} mode={{ item.mode | default(omit) }}
+    with_items:
+    - { path: "/etc/systemd/system/systemd-nspawn@{{container_name}}.service.d/" }
+
+  - name: Configure systemd-spawn
+    template: src=files/nspawn-br0-ixp dest="/etc/systemd/system/systemd-nspawn@{{container_name}}.service.d/local.conf"
+
+  # this is used by the main playbook to access the container
+  - name: Install the machinectl wrapper
+    template: src=files/python3-wrapper dest="/usr/local/sbin/python3-{{container_name}}"
+
+  handlers:
+  - name: Restart systemd-networkd
+    systemd: name=systemd-networkd state=restarted
+

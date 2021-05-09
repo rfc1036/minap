@@ -1,0 +1,5 @@
+[as112_hosts]
+server1.minap.it ansible_user=root
+
+[as112_servers]
+as112.minap.it ansible_user=root ansible_host=server1.minap.it ansible_python_interpreter=/usr/local/sbin/python3-as112

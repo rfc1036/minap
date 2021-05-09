@@ -1,0 +1,45 @@
+auto lo
+iface lo inet loopback
+
+auto host0
+iface host0 inet6 static
+	address 2001:4b7a:a006::112/64
+	gateway fe80::1
+	dad-attempts 0
+	pre-up ip -6 rule add from 2001:4b7a:a006::/64 lookup 10
+	down   ip -6 rule del from 2001:4b7a:a006::/64 lookup 10
+	up ip -6 route add default via fe80::1 dev $IFACE table 10
+
+auto ixp
+iface ixp inet static
+	address 185.1.114.112/24
+
+iface ixp inet6 static
+	address 2001:7f8:c5::112/64
+	preferred-lifetime 0
+	dad-attempts 0
+
+auto as112
+iface as112 inet static
+	pre-up [ -d /sys/class/net/$IFACE ] || ip link add $IFACE type dummy
+	address 192.175.48.1/24
+	up ip addr add 192.175.48.6/24 dev $IFACE
+	up ip addr add 192.175.48.42/24 dev $IFACE
+
+iface as112 inet6 static
+	address 2620:4f:8000::1/48
+	preferred-lifetime 0
+	dad-attempts 0
+	up ip addr add 2620:4f:8000::6/48  preferred_lft 0 dev $IFACE
+	up ip addr add 2620:4f:8000::42/48 preferred_lft 0 dev $IFACE
+
+auto dname
+iface dname inet static
+	pre-up [ -d /sys/class/net/$IFACE ] || ip link add $IFACE type dummy
+	address 192.31.196.1/24
+
+iface dname inet6 static
+	address 2001:4:112::1/48
+	preferred-lifetime 0
+	dad-attempts 0
+
