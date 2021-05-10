@@ -1,0 +1,6 @@
+etc/members.conf
+htdocs/**/*.html
+htdocs/images/logo-*
+htdocs/lib/*
+htdocs/sitemap.xml
+ttlib/inc/members.html
