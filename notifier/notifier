@@ -1,0 +1,156 @@
+#!/usr/bin/perl
+# vim: shiftwidth=4 tabstop=4
+#
+# Copyright 2021 by Marco d'Itri <md@linux.it>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+use v5.14;
+use utf8;
+use warnings;
+use autodie;
+use open qw(:locale);
+
+use Path::Tiny;
+use Net::Netrc;
+use HTTP::Tiny;
+use JSON::XS;
+
+##############################################################################
+# This is the IXP Manager API endpoint. Add to your ~/.netrc a section like:
+#
+# machine https://manager.minap.it/api/
+#         password write-your-api-key-here
+#
+my $IXP_Manager_API = 'https://manager.minap.it/api/';
+
+##############################################################################
+{
+	my ($search, $template);
+
+	if (not @ARGV or @ARGV > 2) {
+		die "Usage: $0 [TEMPLATE] MEMBER\n";
+	} elsif (@ARGV == 1) {
+		$template = 'empty.template';
+		$search = $ARGV[0];
+	} else {
+		$template = $ARGV[0];
+		$search = $ARGV[1];
+	}
+
+	my $cache = path('ixf.js');
+	my $ixf = get_ixf_data($cache);
+	my $member_ixf = member_ixf($ixf, $search);
+	die "Could not find member $search!\n" if not $member_ixf;
+
+	my $vars = template_variables($member_ixf);
+	my $file = process_template($template, $vars);
+	send_email($file);
+
+	exit(0);
+}
+
+##############################################################################
+sub template_variables {
+	my ($m) = @_;
+
+	return {
+		as => $m->{asnum},
+		name => $m->{name},
+		mailto => join(', ', @{ $m->{contact_email} }),
+	};
+}
+
+sub member_ixf {
+	my ($ixf, $search) = @_;
+
+	foreach my $m (@{ $ixf->{member_list} }) {
+		return $m if $m->{asnum} eq $search;
+		return $m if $m->{name} =~ /$search/i;
+	}
+
+	return;
+}
+
+##############################################################################
+sub process_template {
+	my ($file, $vars) = @_;
+
+	my $template = path($file)->slurp_utf8;
+	$template =~ s/
+		^ ([\s\*\+-]*) <-@(\S+?)-> \s* $
+	/
+		$1 . join($1, eval "\@{ \$vars->{$2} }") . "\n"
+	/mgex;
+	$template =~ s/<-@(\S+?)->/ join(' ', eval "\@{ \$vars->{$1} }") /mgex;
+	$template =~ s/<-(\S+?)->/ eval "\$vars->{$1}" /gex;
+
+	my $tempfile = Path::Tiny->tempfile;
+	$tempfile->spew_utf8($template);
+	return $tempfile;
+}
+
+sub send_email {
+	my ($message) = @_;
+
+	my @cmd = qw(mutt);
+	my @config = (
+		'set envelope_from',
+		'unset signature',
+		'unset record',
+	);
+	push(@cmd, map { ('-e' => $_) } @config);
+	push(@cmd, '-H' => $message);
+	system(@cmd);
+
+	return;
+}
+
+##############################################################################
+sub get_ixf_data {
+	my ($cache, $ttl) = @_;
+	$ttl ||= 8 * 60 * 60;
+
+	if ($cache and $cache->exists) {
+		my $age = time - $cache->stat->mtime;
+		return decode_json($cache->slurp_utf8) if $age < $ttl;
+	}
+
+	my $json = ixpmanager_api('v4/member-export/ixf/1.0');
+
+	$cache->spew_utf8($json) if $cache;
+	return decode_json($json);
+}
+
+sub ixpmanager_api {
+	my ($api) = @_;
+
+	my $url = $IXP_Manager_API . $api;
+
+	my $http = HTTP::Tiny->new(verify_SSL => 1);
+	my $response = $http->get($url, {
+		headers => {
+			'X-IXP-Manager-API-Key' => ixp_manager_api_key($IXP_Manager_API),
+		},
+	});
+	$response->{content} =~ s/\n$// if $response->{status} == 599;
+	die "Could not download $url: "
+			. ($response->{status} == 599 ? $response->{content}
+			: "$response->{status} $response->{reason}") . "!\n"
+		if not $response->{success};
+
+	return $response->{content};
+}
+
+sub ixp_manager_api_key {
+	my ($url) = @_;
+
+	my $machine = Net::Netrc->lookup($url);
+	die "No password found in .netrc for $url!\n"
+		if not $machine;
+	return $machine->password;
+}
+
