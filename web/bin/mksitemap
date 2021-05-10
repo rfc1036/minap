@@ -1,0 +1,64 @@
+#!/usr/bin/perl
+# https://www.google.com/ping?sitemap=https://www.minap.it/sitemap.xml
+
+use v5.14;
+use utf8;
+use strict;
+use warnings;
+
+use Path::Tiny;
+use POSIX qw(strftime);
+
+my $docroot = path('htdocs');
+my $sitemap_file = $docroot->child('sitemap.xml');
+my $base_url = 'https://www.minap.it';
+
+##############################################################################
+my $state = $docroot->visit(\&visit_file, {
+	recurse => 1,
+	follow_symlinks => 1,
+});
+
+my $sitemap = <<EOF;
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+EOF
+
+die if not $state->{files} or not @{$state->{files}};
+
+foreach my $path (sort @{$state->{files}}) {
+	next if $path !~ /\.html$/;
+
+	my $url = $path;
+	$url =~ s#^$docroot##;
+	$url =~ s#index\.html$##;
+	next if $url =~ m#^/google[0-9a-f]{16}\.html$#;
+
+	my $changed = strftime('%FT%TZ', gmtime($path->stat->mtime));
+
+    $sitemap .= <<EOF;
+  <url>
+    <loc>$base_url$url</loc>
+    <lastmod>$changed</lastmod>
+  </url>
+EOF
+}
+
+$sitemap .= <<EOF;
+</urlset>
+EOF
+
+$sitemap_file->spew_utf8($sitemap);
+
+exit;
+
+##############################################################################
+sub visit_file {
+	my ($path, $state) = @_;
+
+	return if $path->is_dir;
+
+	push(@{$state->{files}}, $path);
+	return;
+}
+

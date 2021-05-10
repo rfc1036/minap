@@ -4,6 +4,9 @@ if [ "$(hostname)" = 'bongo.bofh.it' ]; then
   ttargs="$ttargs --define root_prefix=/minap"
 fi
 
-exec \
+cd $(dirname $0)/../
+
 ttree -f etc/ttree.cfg $ttargs "$@"
+
+./bin/mksitemap
 
