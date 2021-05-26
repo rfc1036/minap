@@ -43,7 +43,7 @@ sub ixp_manager_ixf {
 	my $cache = path('ixf.json');
 	return decode_json($cache->slurp_utf8) if $cache->exists;
 
-	my $url = $api . 'v4/member-export/ixf/0.7';
+	my $url = $api . 'v4/member-export/ixf/1.0';
 	my $http = HTTP::Tiny->new(verify_SSL => 1);
 	my $response = $http->get($url);
 	$response->{content} =~ s/\n$// if $response->{status} == 599;
