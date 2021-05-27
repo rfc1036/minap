@@ -6,7 +6,7 @@
 [% v div 1000 %] Gbps
 [%- END %]
 [%- END %]
-<table class="table table-hover">
+<table id="members-table" class="table table-hover">
 <thead>
 <tr>
  <th scope="col">Name</th>
@@ -25,7 +25,7 @@
  <td><a href="[% m.url | html %]">[% m.name | html %]</a> </td>
  <td>[% m.asnum %]</td>
  <td>[% m.location | html %]</td>
- <td>[% pretty_speed(m.speed) %]</td>
+ <td data-sort="[% m.speed %]">[% pretty_speed(m.speed) %]</td>
 [% IF members_show_ip %]
  <td>[% IF m.ipv4 %][% m.ipv4 %][% ELSE %](pending)[% END %]</td>
  <td>[% m.ipv6 %]</td>

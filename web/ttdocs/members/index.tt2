@@ -4,6 +4,38 @@
   page.nav_active_link = 'members';
   page.nosidebar = 1
 %]
+[% page.css = BLOCK %]
+th[role=columnheader]:not(.no-sort) {
+	cursor: pointer;
+}
+
+th[role=columnheader]:not(.no-sort):after {
+	content: '';
+	float: right;
+	margin-top: 7px;
+	border-width: 0 4px 4px;
+	border-style: solid;
+	border-color: #404040 transparent;
+	visibility: hidden;
+	opacity: 0;
+	user-select: none;
+}
+
+th[aria-sort=ascending]:not(.no-sort):after {
+	border-bottom: none;
+	border-width: 4px 4px 0;
+}
+
+th[aria-sort]:not(.no-sort):after {
+	visibility: visible;
+	opacity: 0.4;
+}
+
+th[role=columnheader]:not(.no-sort):hover:after {
+	visibility: visible;
+	opacity: 1;
+}
+[% END %]
 [% WRAPPER htmlpage %]
 <div class="row">
   <h1 class="text-center">[% page.title %]</h1>
@@ -16,4 +48,8 @@
 
 <p>Route servers peers marked with a * only announce a subset of their routes to the routes servers: their peers are advised to establish direct BGP sessions.</p>
 </div>
+
+<script src="[% site.url.styles %]/tablesort.min.js"></script>
+<script src="[% site.url.styles %]/tablesort.number.min.js"></script>
+<script>new Tablesort(document.getElementById("members-table"));</script>
 [% END %]
