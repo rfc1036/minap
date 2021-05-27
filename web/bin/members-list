@@ -17,7 +17,7 @@ use Path::Tiny;
 use YAML::XS;
 use JSON::XS;
 use Template;
-use List::Util qw(sum0);
+use List::Util qw(sum0 uniq);
 
 ##############################################################################
 {
@@ -55,7 +55,7 @@ sub ixp_manager_ixf {
 	return decode_json($response->{content});
 }
 
-sub members_from_ixf {
+sub members_from_ixf_distinct_ports {
 	my ($ixf, $config) = @_;
 
 	my %switch2pop = map { $_->{id} => $_->{colo} }
@@ -99,6 +99,72 @@ sub members_from_ixf {
 
 			push(@members, \%c);
 		}
+	}
+
+	# add more members from the config file
+	push(@members, @{ $config->{more_members} || [] });
+
+	@members = sort { $a->{name} cmp $b->{name} } @members;
+
+	return @members;
+}
+
+sub members_from_ixf {
+	my ($ixf, $config) = @_;
+
+	my %switch2pop = map { $_->{id} => $_->{colo} }
+		@{ $ixf->{ixp_list}->[0]->{switch} };
+
+	# rewrite the names of the Irideos data centers because they are too long
+	$switch2pop{$_} =~ s#^IRIDEOS Avalon Campus \((.+)\)$#IRIDEOS ($1)#
+		foreach keys %switch2pop;
+
+	my %rs_limited = map { $_ => 1 } @{ $config->{rs_limited} };
+	my %ignore = map { $_ => 1 } @{ $config->{ignore} };
+
+	my @members;
+	foreach my $member (@{ $ixf->{member_list} }) {
+		next if $ignore { $member->{asnum} };
+		next if $member->{member_type} eq 'ixp';
+
+		my %c = (
+			name =>		$member->{name},
+			url =>		$member->{url},
+			asnum =>	$member->{asnum},
+			speed =>	sum0(
+				map { $_->{if_speed} }
+				map { @{ $_->{if_list} } }
+				@{ $member->{connection_list} }
+			),
+			member_since => $member->{member_since},
+		);
+
+		my @locations =
+			map { $switch2pop{$_} }
+			uniq
+			map { $_->{if_list}->[0]->{switch_id} }
+			grep { $_->{if_list}->[0]->{switch_id} }
+			@{ $member->{connection_list} };
+		$c{location} = join(', ', @locations) if @locations;
+
+		# we assume that all the IPs of a member either peer or not peer
+		# with the route servers
+		my $conn = $member->{connection_list}->[0];
+		if ($conn->{vlan_list}) {
+			if ($conn->{vlan_list}->[0]->{ipv4}) {
+				$c{rs4} = $conn->{vlan_list}->[0]->{ipv4}->{routeserver}
+					? 'Yes' : 'No';
+				$c{rs4_limited} = 1 if $rs_limited{ $member->{asnum} };
+				$c{ipv4} = $conn->{vlan_list}->[0]->{ipv4}->{address};
+			}
+			if ($conn->{vlan_list}->[0]->{ipv6}) {
+				$c{rs6} = $conn->{vlan_list}->[0]->{ipv6}->{routeserver}
+					? 'Yes' : 'No';
+				$c{ipv6} = $conn->{vlan_list}->[0]->{ipv6}->{address};
+			}
+		}
+
+		push(@members, \%c);
 	}
 
 	# add more members from the config file
