@@ -17,6 +17,10 @@ use Path::Tiny;
 use Template;
 use JSON::XS;
 
+# Use a different template for these devices.
+my %Switch_Vendor = (
+);
+
 # This is the IXP Manager API endpoint. Add to your ~/.netrc a section like:
 #
 # machine https://manager.minap.it/api/
@@ -42,7 +46,10 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	die "Port '$port' not found on $switch!\n" if not @$ports;
 	#use DDP; p $ports;
 
-	my $template = path('minap-l2.tt2')->slurp_utf8;
+	my $template_file = 'minap-l2.tt2';
+	$template_file = 'minap-l2-' . lc($Switch_Vendor{$switch}) . '.tt2'
+		if exists $Switch_Vendor{$switch};
+	my $template = path($template_file)->slurp_utf8;
 	build_config(\$template, {
 		switch => $switch,
 		ports => $ports,
