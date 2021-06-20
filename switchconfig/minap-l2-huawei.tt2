@@ -1,0 +1,112 @@
+[%
+  MACRO shutdown IF i.shutdown;
+    'shutdown';
+  ELSE;
+    'undo shutdown';
+  END;
+
+  THROW 'Only edge ports are supported!' IF NOT i.type == 'edge';
+
+  # override the configured VLAN with the quarantine one
+  MACRO vlan_number(if) IF if.status == 'quarantine';
+    '866';
+  ELSE;
+    if.vlans.0.number;
+  END;
+
+  MACRO dash_mac(address) BLOCK;
+    address.replace('^(..):(..):(..):(..):(..):(..)', '$1$2-$3$4-$5$6');
+  END;
+%]
+[% BLOCK mac_acl %]
+[%
+  THROW 'No VLANs defined for the port' IF NOT i.vlans.size;
+%]
+undo acl name MEMBER[% i.virtualinterfaceid %]-IN
+acl name MEMBER[% i.virtualinterfaceid %]-IN link
+ rule 10 deny destination-mac dead-beef-0666
+[% IF i.vlans.0.macaddresses.size > 0 AND i.status != 'quarantine' %]
+[% SET rule_num = 20 %]
+[% FOREACH address = i.vlans.0.macaddresses %]
+ rule [% rule_num %] permit l2-protocol arp source-mac [% dash_mac(address) +%]
+ rule [% rule_num + 1 %] permit l2-protocol ip source-mac [% dash_mac(address) +%]
+ rule [% rule_num + 2 %] permit l2-protocol ipv6 source-mac [% dash_mac(address) +%]
+[% SET rule_num = rule_num + 10 %]
+[% END %]
+[% ELSE %]
+ rule 90 permit l2-protocol arp
+ rule 91 permit l2-protocol ip
+ rule 92 permit l2-protocol ipv6
+[% END %]
+[% IF i.lagframing %]
+ rule 95 permit l2-protocol 0x8809 destination-mac 0180-c200-0002
+[% END %]
+ rule 99 deny
+
+[% END %]
+[%# USE Dumper; Dumper.dump(ports) %]
+
+ ssh [% switch %].minap.it
+
+! Please cut and paste:
+! ----8<----------------------------------------------------------------------
+system-view
+
+! Ports MUST be flapped when their MAC address changes or they are
+! being moved in or out of quarantine.
+[% FOREACH i = ports %]
+interface [% i.name +%]
+ shutdown
+[% END %]
+ quit
+
+[% FOREACH i = ports %]
+[%
+  IF NOT printed_mac_acl.${i.virtualinterfaceid} AND
+      ((NOT i.lagframing) OR (i.lagframing AND i.lagmaster));
+    INCLUDE mac_acl;
+    SET printed_mac_acl.${i.virtualinterfaceid} = 1;
+  END;
+%]
+[% IF mac_acl_only %]
+[% ELSIF i.lagframing %]
+[% IF i.lagmaster %]
+[%# a LAG interface %]
+interface [% i.name +%]
+ ! LAG members: [% i.lagmembers.join(' ') +%]
+ description [% i.description +%]
+ port link-type access
+ port default vlan [% vlan_number(i) +%]
+ stp bpdu-filter enable
+ traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
+ mode lacp
+ load-balance enhanced profile LB-L2+IP
+ [% shutdown +%]
+
+[% ELSE %]
+[%# an interface which is a LAG member %]
+interface [% i.name +%]
+ description [% i.description +%]
+ eth-trunk [% i.lagindex +%]
+ multicast-suppression packets 100
+ broadcast-suppression packets 100
+
+[% END %]
+[% ELSE %]
+[%# an interface which is not a LAG member %]
+interface [% i.name +%]
+ description [% i.description +%]
+ port link-type access
+ port default vlan [% vlan_number(i) +%]
+ stp bpdu-filter enable
+ traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
+ [% shutdown +%]
+
+[% END %]
+[% END %]
+quit
+quit
+
+save force
+
+! ----8<----------------------------------------------------------------------
