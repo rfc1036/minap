@@ -50,6 +50,13 @@ ul.popdescr span.label {
 <li><span class="label">Building:</span> D - ground floor</li>
 </ul>
 
+<ul class="popdescr">
+<li><span class="label">POP name:</span> Mynet</li>
+<li><span class="label">Sponsor:</span> <a href="https://www.mynet.it/">Mynet</a></li>
+<li><span class="label">Location:</span> <a href="https://irideos.it/">IRIDEOS Avalon Campus (formerly Enter)</a></li>
+<li><span class="label">Building:</span> D - ground floor</li>
+</ul>
+
 <h2>Topology</h2>
 <p>Please consult our
 <a href="[% site.url.root %]/network/">Network
