@@ -57,6 +57,12 @@ ul.popdescr span.label {
 <li><span class="label">Building:</span> D - ground floor</li>
 </ul>
 
+<p>Please note that, since IRIDEOS charges their customers for
+pre-cabling also for inbound cross-connects, the sponsors of these POPs
+will need to directly charge members on a cost-recovery basis.
+Connections to MINAP switches hosted in other data centers are not
+subject to these fees and MINAP never receives money from members.</p>
+
 <h2>Topology</h2>
 <p>Please consult our
 <a href="[% site.url.root %]/network/">Network
