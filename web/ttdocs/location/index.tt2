@@ -44,7 +44,7 @@ ul.popdescr span.label {
 </ul>
 
 <ul class="popdescr">
-<li><span class="label">POP name:</span> Enter</li>
+<li><span class="label">POP name:</span> Enter (closed to new members)</li>
 <li><span class="label">Sponsor:</span> <a href="https://irideos.it/">IRIDEOS</a></li>
 <li><span class="label">Location:</span> <a href="https://irideos.it/">IRIDEOS Avalon Campus (formerly Enter)</a></li>
 <li><span class="label">Building:</span> D - ground floor</li>
