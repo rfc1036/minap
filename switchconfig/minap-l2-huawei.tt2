@@ -90,6 +90,7 @@ interface [% i.name +%]
  eth-trunk [% i.lagindex +%]
  multicast-suppression packets 100
  broadcast-suppression packets 100
+ [% shutdown +%]
 
 [% END %]
 [% ELSE %]
