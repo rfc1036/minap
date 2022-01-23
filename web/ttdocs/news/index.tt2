@@ -1,5 +1,5 @@
 [%
-  page.news_current_year = 2021;
+  page.news_current_year = news_last_year;
   page.title = 'Updates for ' _ page.news_current_year;
   page.description = 'The news about MINAP in ' _ page.news_current_year _ '.';
   page.nav_active_link = 'news';

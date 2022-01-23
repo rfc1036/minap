@@ -1,5 +1,5 @@
 [% MACRO year_link(year) BLOCK %]
-[% IF year != 2021 %]
+[% IF year != news_last_year %]
 /news/[% year %].html
 [%- ELSE %]
 /news/
@@ -16,8 +16,10 @@
 [% END %]
 <nav aria-label="Years navigation">
   <ul class="pagination">
-[% FOREACH year IN [ 2021, 2020, 2019, 2018, 2017 ] %]
+[% year = news_last_year %]
+[% WHILE year >= 2017 %]
 [% year_li(year) %]
+[% year = year - 1 %]
 [% END %]
   </ul>
 </nav>
