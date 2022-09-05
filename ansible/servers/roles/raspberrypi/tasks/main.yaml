@@ -1,0 +1,14 @@
+# This role configures an image downloaded from https://raspi.debian.net/.
+
+- name: Configure the Raspberry Pi boot process
+  copy: src=raspi-firmware-custom dest=/etc/default/raspi-firmware-custom
+  notify: Reconfigure raspi-firmware
+
+- name: Delete the image initialization files
+  file: state=absent name={{item}}
+  with_items:
+    - /boot/firmware/sysconf.txt
+    - /etc/systemd/system/basic.target.requires/rpi-set-sysconf.service
+    - /etc/systemd/system/rpi-set-sysconf.service
+    - /usr/local/sbin/rpi-set-sysconf
+

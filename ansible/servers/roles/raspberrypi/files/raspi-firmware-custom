@@ -1,0 +1,6 @@
+# reduce the memory assigned to the GPU as appropriate for headless systems
+gpu_mem=16
+
+# disable a workaround for broken SD cards
+boot_delay=0
+

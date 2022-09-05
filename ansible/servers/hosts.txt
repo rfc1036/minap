@@ -1,0 +1,2 @@
+[servers]
+server2.minap.it ansible_user=root

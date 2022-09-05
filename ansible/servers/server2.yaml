@@ -1,0 +1,135 @@
+- hosts: server2.minap.it
+  gather_facts: false
+
+  tasks:
+    - name: Configure a Raspberry Pi
+      import_role: name=raspberrypi
+
+    - name: Remove some unneeded standard packages
+      apt:
+        state: absent
+        purge: true
+        name:
+          - apparmor
+          - cron
+          - dmidecode
+          - eatmydata
+          - isc-dhcp-client
+          - isc-dhcp-common
+          - iw
+          - nano
+          - parted
+          - pigz
+          - rsyslog
+          - sysstat
+          - tasksel
+          - tasksel-data
+          - wpasupplicant
+          - xauth
+
+    - name: Configure the custom sysctls
+      template: src=files/sysctl.d/{{item}} dest=/etc/sysctl.d/
+      notify: Reload the sysctls
+      with_items:
+        - arp.conf
+        - local.conf
+        - ra.conf
+
+    - name: Configure apt
+      copy:
+        dest: /etc/apt/apt.conf.d/no-recommends
+        content: "APT { Install-Recommends \"false\"; };\n"
+
+    - name: Configure the default locale
+      copy:
+        dest: /etc/default/locale
+        content: "LANG=C.UTF-8\n"
+
+    - name: Configure the time zone
+      timezone: name=Europe/Rome
+
+    - name: Disable resuming from disk
+      copy:
+        dest: /etc/initramfs-tools/conf.d/resume
+        content: "RESUME=none\n"
+
+    - name: Configure systemd
+      ini_file: path=/etc/systemd/system.conf no_extra_spaces=yes section=Manager option={{item.option}} value={{item.value}}
+      with_items:
+        - { option: RuntimeWatchdogSec, value: 15 }
+        - { option: RebootWatchdogSec, value: 15 }
+      notify: Reload the systemd configuration
+
+    - name: Configure systemd-journald
+      ini_file: path=/etc/systemd/journald.conf no_extra_spaces=yes section=Journal option={{item.option}} value={{item.value}}
+      with_items:
+        - { option: MaxFileSec, value: 1day }
+        - { option: MaxRetentionSec, value: 3months }
+      notify: Restart systemd-journald
+
+    - name: Set the debconf keys
+      debconf:
+        name: "{{ item.name }}"
+        question: "{{ item.question }}"
+        vtype: "{{ item.vtype }}"
+        value: "{{ item.value | default('') }}"
+      with_items:
+        - name: rpki-trust-anchors
+          question: rpki-trust-anchors/get_arin_tal
+          vtype: boolean
+          value: true
+
+    - name: Configure rpki-client
+      lineinfile:
+        path: /etc/default/rpki-client
+        create: true
+        regexp: '^OPTIONS='
+        line: 'OPTIONS=-j'
+
+    - name: Configure stayrtr-client
+      lineinfile:
+        path: /etc/default/stayrtr
+        regexp: '^STAYRTR_ARGS='
+        line: 'STAYRTR_ARGS=-bind :323 -checktime=false -cache /var/lib/rpki-client/json'
+      notify: Restart stayrtr
+
+    - name: Install everything
+      apt:
+        cache_valid_time: 28800
+        name:
+          - busybox-static
+          - ca-certificates
+          - curl
+          - ifupdown
+          - iproute2
+          - iptables
+          - restic
+          - rpki-client
+          - stayrtr
+          - systemd-timesyncd
+          - zstd
+          # nice to have
+          - bash-completion
+          - iputils-ping
+          - less
+          - lsof
+          - mtr-tiny
+          - procps
+          - screen
+          - strace
+          - tcpdump
+          - vim-tiny
+
+    - name: Configure BIRD
+      import_role: name=bird2
+
+  handlers:
+    - name: Reload the sysctls
+      systemd: name=systemd-sysctl state=restarted
+    - name: Reload the systemd configuration
+      systemd: daemon_reload=yes
+    - name: Restart stayrtr
+      systemd: name=stayrtr state=restarted
+    - name: Restart systemd-journald
+      systemd: name=systemd-journald state=restarted
+

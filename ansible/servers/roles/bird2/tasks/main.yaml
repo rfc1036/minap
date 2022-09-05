@@ -1,0 +1,50 @@
+- name: Install everything
+  apt:
+    cache_valid_time: 28800
+    name:
+      - curl
+
+- name: Rename the default BIRD configuration
+  command:
+    creates: /etc/bird/bird.conf.dpkg-dist
+    cmd: mv /etc/bird/bird.conf /etc/bird/bird.conf.dpkg-dist
+
+- name: Create all directories
+  file: state=directory path={{item}}
+  with_items:
+    - /etc/systemd/system/bird.service.d/
+    - /etc/systemd/system/bird6.service.d/
+
+- name: Install all files
+  copy: src={{ item.src }} dest={{ item.dest | default('/usr/local/bin/') }} mode={{ item.mode | default('0644') }}
+  with_items:
+    - { src: bird6, dest: /usr/sbin/, mode: '0755' }
+    - { src: birdc6, dest: /usr/sbin/, mode: '0755' }
+
+- name: Create all symlinks
+  file: state=link force=yes src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: /home/admin/rpsltool/minap-bird.conf, dest: /etc/bird/bird.conf }
+    - { src: /home/admin/rpsltool/minap-bird6.conf, dest: /etc/bird/bird6.conf }
+    - { src: /usr/sbin/birdc, dest: /usr/local/bin/birdc }
+    - { src: /usr/sbin/birdc6, dest: /usr/local/bin/birdc6 }
+
+- name: Configure systemd
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: bird6.service, dest: /etc/systemd/system/ }
+    - { src: restart.conf, dest: /etc/systemd/system/bird.service.d/ }
+    - { src: restart.conf, dest: /etc/systemd/system/bird6.service.d/ }
+  notify: Reload the systemd configuration
+
+- name: Enable bird6.service
+  systemd: enabled=yes name=bird6.service
+
+- name: Create the admin user
+  user:
+    name: admin
+    comment: Admin
+    group: admin
+    groups: bird
+    append: true
+

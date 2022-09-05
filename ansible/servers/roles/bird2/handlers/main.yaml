@@ -1,0 +1,2 @@
+- name: Reload the systemd configuration
+  systemd: daemon_reload=yes
