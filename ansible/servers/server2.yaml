@@ -102,6 +102,8 @@
           - curl
           - ifupdown
           - iproute2
+          - prometheus-bird-exporter
+          - prometheus-node-exporter
           - iptables
           - restic
           - rpki-client
