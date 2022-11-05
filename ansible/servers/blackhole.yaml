@@ -1,0 +1,70 @@
+- hosts: blackhole.minap.it
+  gather_facts: false
+
+  tasks:
+    - name: Install everything
+      apt:
+        cache_valid_time: 28800
+        name:
+          - busybox-static
+
+    - name: Create the directories
+      file: state=directory path={{root_dir}}{{item}}
+      with_items:
+        - /bin/
+        - /etc/
+
+    - name: Create the symlinks
+      file: state=link src={{item.src}} dest={{root_dir}}{{item.dest}}
+      with_items:
+        - { src: bin, dest: sbin }
+
+    - name: Install busybox
+      copy:
+        remote_src: true
+        src: /bin/busybox
+        dest: "{{root_dir}}/bin/"
+        mode: preserve
+
+    - name: Install the busybox commands
+      shell:
+        chdir: "{{root_dir}}/bin/"
+        cmd: './busybox --list | grep -wv busybox | xargs -n1 ln -s busybox'
+        creates: "{{root_dir}}/bin/ls"
+
+    - name: Create /etc/passwd
+      copy:
+        dest: "{{root_dir}}/etc/passwd"
+        content: "root::0:0:root:/root:/bin/sh\n"
+
+    - name: Create /etc/os-release
+      copy:
+        dest: "{{root_dir}}/etc/os-release"
+        content: "NAME=\"blackhole container\"\n"
+
+    - name: Create /etc/inittab
+      copy:
+        dest: "{{root_dir}}/etc/inittab"
+        content: |
+          #::respawn:/bin/getty 38400 /dev/console
+          ::once:/etc/rc.local
+
+    - name: Create /etc/rc.local
+      copy:
+        src: blackhole-net
+        dest: "{{root_dir}}/etc/rc.local"
+        mode: '0755'
+
+    - name: Create the container configuration
+      copy:
+        src: systemd/blackhole.conf
+        dest: /etc/systemd/system/systemd-nspawn@blackhole.service.d/local.conf
+      notify: Reload the systemd configuration
+
+    - name: Enable the container
+      systemd: name=systemd-nspawn@blackhole enabled=yes
+
+  handlers:
+    - name: Reload the systemd configuration
+      systemd: daemon_reload=yes
+

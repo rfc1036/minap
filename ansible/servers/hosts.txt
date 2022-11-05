@@ -1,2 +1,3 @@
 [servers]
 server2.minap.it ansible_user=root
+blackhole.minap.it ansible_user=root ansible_host=server1.minap.it root_dir=/var/lib/machines/blackhole/
