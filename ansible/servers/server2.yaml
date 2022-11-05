@@ -5,6 +5,17 @@
     - name: Configure a Raspberry Pi
       import_role: name=raspberrypi
 
+    - name: Create the directories
+      file: state=directory path={{root}}{{item}}
+      with_items:
+        - /etc/systemd/system/rpki-client.service.d/
+
+    - name: Configure the systemd drop-ins
+      copy: src=files/systemd/{{item.src}} dest=/etc/systemd/system/{{item.dest}}
+      with_items:
+        - { src: nice.conf, dest: rpki-client.service.d/ }
+      notify: Reload the systemd configuration
+
     - name: Remove some unneeded standard packages
       apt:
         state: absent
