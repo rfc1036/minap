@@ -104,7 +104,8 @@ sub find_ports {
 	my @ports;
 	foreach my $port (@{ $data->{layer2interfaces} }) {
 		push(@ports, $port)
-			if  ($search =~ /^\d+$/
+			if  not defined $search or
+				($search =~ /^\d+$/
 					and $port->{name} =~ /^Te1\/0\/$search$/) or
 				($search =~ /^Te(?:nGigabitEthernet)?1\/0\/\d+$/
 					and $port->{name} =~ /^Te1\/0\/$search$/) or
