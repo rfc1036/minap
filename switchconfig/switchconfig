@@ -39,7 +39,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	die "Invalid switch name '$switch'!\n" if $switch !~ /^swc?-[a-z]+$/;
 
 	my $cache;
-	#$cache = path("cache-$switch.json");
+	$cache = path("cache-$switch.json");
 	my $l2 = switch_data($switch, $cache);
 	die 'Not enough interfaces' if not @{ $l2->{layer2interfaces} } > 0;
 	#use DDP; p $l2; exit;
@@ -64,9 +64,13 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 ##############################################################################
 sub switch_data {
-	my ($switch, $cache) = @_;
+	my ($switch, $cache, $ttl) = @_;
+	#$ttl ||= 8 * 60 * 60;
 
-	return decode_json($cache->slurp_utf8) if $cache and $cache->exists;
+	if ($ttl and $cache and $cache->exists) {
+		my $age = time - $cache->stat->mtime;
+		return decode_json($cache->slurp_utf8) if $age < $ttl;
+	}
 
 	my $json = ixpmanager_api("v4/provisioner/layer2interfaces/switch-name/$switch.json");
 
