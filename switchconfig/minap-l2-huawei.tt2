@@ -55,6 +55,7 @@ system-view
 ! Ports MUST be flapped when their MAC address changes or they are
 ! being moved in or out of quarantine.
 [% FOREACH i = ports %]
+[% NEXT IF i.lagframing AND NOT i.lagmaster %]
 interface [% i.name +%]
  shutdown
 [% END %]
