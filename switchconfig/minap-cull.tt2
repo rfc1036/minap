@@ -1,0 +1,46 @@
+[%
+  MACRO disable IF culling == 'off';
+    IF switch_vendor == 'ios';
+      'no ';
+    ELSIF switch_vendor == 'huawei';
+      'undo ';
+    END;
+  ELSE;
+    '';
+  END;
+
+  THROW 'Only edge ports are supported!' IF NOT i.type == 'edge';
+%]
+[%# USE Dumper; Dumper.dump(ports) %]
+
+ ssh [% switch %].minap.it
+
+! Please cut and paste:
+! ----8<----------------------------------------------------------------------
+[% IF switch_vendor == 'ios' %]
+configure terminal
+
+[% FOREACH i = ports %]
+[% NEXT IF i.lagframing AND NOT i.lagmaster %]
+interface [% i.name +%]
+ [% disable %]ip access-group BGP-CULLING in
+ [% disable %]ipv6 traffic-filter BGP6-CULLING in
+[% END %]
+exit
+exit
+[% ELSIF switch_vendor == 'huawei' %]
+system-view
+
+[% FOREACH i = ports %]
+[% NEXT IF i.lagframing AND NOT i.lagmaster %]
+interface [% i.name +%]
+ [% disable %]traffic-filter inbound acl name BGP-CULLING
+ [% disable %]traffic-filter inbound acl ipv6 name BGP-CULLING
+[% END %]
+quit
+quit
+[% ELSE %]
+[% THROW 'unknown switch vendor!' %]
+[% END %]
+
+! ----8<----------------------------------------------------------------------
