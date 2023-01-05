@@ -1,0 +1,15 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Contact: mailto:noc@minap.it
+Expires: 2038-01-18T23:00:00.000Z
+Preferred-Languages: it, en
+Canonical: https://www.minap.it/.well-known/security.txt
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQQnKUXNg20437dCfobLPsM64d7XgQUCY3mm7wAKCRDLPsM64d7X
+gVmvAPsHQlAjtVBFqG8o/G1svX3+o/9O86yCXF5VcShe1QjZ8QEA1jX72jwEZws9
+RH5Nt0/9xgPju3klN7rLYG7BG7iKagE=
+=91mE
+-----END PGP SIGNATURE-----
