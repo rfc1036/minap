@@ -36,7 +36,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 	die "Usage: $0 SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]\n"
 		if not $switch or not $port;
-	die "Invalid switch name '$switch'!\n" if $switch !~ /^swc?-[a-z]+$/;
+	die "Invalid switch name '$switch'!\n" if $switch !~ /^sw[2c]?-[a-z]+$/;
 
 	my $cache;
 	$cache = path("cache-$switch.json");
