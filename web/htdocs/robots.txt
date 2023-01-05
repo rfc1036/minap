@@ -10,3 +10,5 @@ Disallow: /
 User-agent: SemrushBot
 Disallow: /
 
+Sitemap: https://www.minap.it/sitemap.xml
+
