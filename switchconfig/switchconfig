@@ -20,7 +20,8 @@ use JSON::XS;
 
 # Use a different template for these devices.
 my %Switch_Vendor = (
-	'sw-mynet'	=> 'Huawei',
+	'sw-mynet'		=> 'Huawei',
+	'swc-seeweb'	=> 'Huawei',
 );
 
 # This is the IXP Manager API endpoint. Add to your ~/.netrc a section like:
