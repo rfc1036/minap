@@ -102,6 +102,8 @@ interface [% i.name +%]
  port default vlan [% vlan_number(i) +%]
  stp bpdu-filter enable
  traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
+ multicast-suppression packets 100
+ broadcast-suppression packets 100
  [% shutdown +%]
 
 [% END %]
