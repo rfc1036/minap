@@ -1,0 +1,109 @@
+- hosts: as112_servers
+  gather_facts: no
+
+  tasks:
+  - name: Configure custom sysctls
+    copy: src=sysctl.conf dest=/etc/sysctl.d/local.conf
+    notify: Reload sysctls
+
+  - name: Configure the resolver
+    lineinfile:
+      path: /etc/resolv.conf
+      regexp: '^nameserver\s'
+      line: 'nameserver 2001:4b78::53'
+
+  - name: Configure the network
+    copy: src=interfaces dest=/etc/network/
+    register: copy_interfaces
+
+  - name: Enable all interfaces
+    command: 'ifup -a'
+    when: copy_interfaces.changed
+
+  - name: Configure apt
+    copy:
+      dest: /etc/apt/apt.conf.d/no-recommends
+      content: "APT { Install-Recommends \"false\"; };\n"
+
+  - name: Configure the default locale
+    copy:
+      dest: /etc/default/locale
+      content: "LANG=C.UTF-8\n"
+
+  - name: Configure the time zone
+    copy:
+      dest: /etc/timezone
+      content: "Europe/Rome\n"
+
+  - name: Configure systemd-journald
+    ini_file: path=/etc/systemd/journald.conf no_extra_spaces=yes section=Journal option={{item.option}} value={{item.value}}
+    with_items:
+    - { option: MaxFileSec, value: 1day }
+    - { option: MaxRetentionSec, value: 1week }
+    notify: Restart systemd-journald
+
+  - name: Install everything
+    apt:
+      cache_valid_time: 28800
+      name:
+      - bird2
+      - ifupdown
+      - nsd
+      # nsd_exporter is not available yet in Debian and needs to be installed
+      # manually
+      #- prometheus-nsd-exporter
+      # nice to have
+      - bash-completion
+      - dnstop
+      - iproute2
+      - iputils-ping
+      - ldnsutils
+      - less
+      - mtr-tiny
+      - procps
+      - vim-tiny
+
+  - name: Copy the DNS zones
+    copy: src=zones/ dest=/etc/nsd/
+    notify: Reload the zones
+
+  - name: Configure NSD
+    copy: src=nsd.conf.d/ dest=/etc/nsd/nsd.conf.d/
+    notify: Reload NSD
+
+  - name: Configure BIRD
+    copy: src=bird.conf dest=/etc/bird/
+    notify: Reload BIRD
+
+  - name: Configure the nsd_exporter metrics
+    copy: src=nsd_exporter.yaml dest=/etc/nsd/nsd_exporter.yaml
+    notify: Restart nsd_exporter
+
+  - name: Configure nsd_exporter
+    lineinfile:
+      path: /etc/default/prometheus-nsd-exporter
+      regexp: '^ARGS='
+      line: 'ARGS="--metric-config /etc/nsd/nsd_exporter.yaml --web.listen-address=[2001:4b7a:a006::112]:9167'
+    notify: Restart nsd_exporter
+    # nsd_exporter is not available yet in Debian and needs to be installed
+    # manually
+    when: false
+
+  handlers:
+  - name: Reload NSD
+    command: 'nsd-control reconfig'
+  - name: Reload the systemd configuration
+    systemd: daemon_reload=yes
+  - name: Reload the zones
+    command: 'nsd-control reload'
+  - name: Reload BIRD
+    systemd: name=bird state=reloaded
+  - name: Reload sysctls
+    systemd: name=systemd-sysctl state=restarted
+  - name: Restart nsd_exporter
+    systemd: name=prometheus-nsd-exporter state=restarted
+  - name: Restart postfix
+    systemd: name=postfix state=restarted
+  - name: Restart systemd-journald
+    systemd: name=systemd-journald state=restarted
+
