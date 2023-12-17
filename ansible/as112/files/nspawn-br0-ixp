@@ -1,3 +1,8 @@
 [Service]
 ExecStart=
 ExecStart=/usr/bin/systemd-nspawn --quiet --keep-unit --boot --network-bridge=br0 --network-veth-extra=vb-{{container_name}}-ixp:ixp --settings=override --machine=%i 
+
+[Unit]
+Wants=sys-subsystem-net-devices-br0.device sys-subsystem-net-devices-ixp.device
+After=sys-subsystem-net-devices-br0.device sys-subsystem-net-devices-ixp.device
+
