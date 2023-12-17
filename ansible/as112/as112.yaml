@@ -75,9 +75,9 @@
     copy: src=named.conf dest=/etc/bind/
     notify: Reload BIND
 
-  - name: Configure bird
+  - name: Configure BIRD
     copy: src=bird.conf dest=/etc/bird/
-    notify: Reload bird
+    notify: Reload BIRD
 
   - name: Configure bind_exporter
     lineinfile:
@@ -93,7 +93,7 @@
     systemd: daemon_reload=yes
   - name: Reload the zones
     command: 'rndc reload'
-  - name: Reload bird
+  - name: Reload BIRD
     systemd: name=bird state=reloaded
   - name: Reload sysctls
     systemd: name=systemd-sysctl state=restarted
