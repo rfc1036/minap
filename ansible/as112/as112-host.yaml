@@ -1,5 +1,5 @@
 - hosts: as112_hosts
-  gather_facts: no
+  gather_facts: false
   vars:
     container_name: as112
 
