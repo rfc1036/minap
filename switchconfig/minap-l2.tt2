@@ -115,6 +115,7 @@ interface [% i.name +%]
  switchport port-security violation protect
 [% FOREACH vlan = i.vlans %]
 [% IF vlan.macaddresses.size %]
+ no switchport port-security mac-address
 [% FOREACH mac = vlan.macaddresses.sort %]
  switchport port-security mac-address [% mac +%]
 [% END %]
