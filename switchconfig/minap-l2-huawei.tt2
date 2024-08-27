@@ -91,6 +91,7 @@ interface [% i.name +%]
  eth-trunk [% i.lagindex +%]
  multicast-suppression packets 100
  broadcast-suppression packets 100
+ unicast-suppression block outbound
  [% shutdown +%]
 
 [% END %]
@@ -104,6 +105,7 @@ interface [% i.name +%]
  traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
  multicast-suppression packets 100
  broadcast-suppression packets 100
+ unicast-suppression block outbound
  [% shutdown +%]
 
 [% END %]

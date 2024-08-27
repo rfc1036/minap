@@ -79,6 +79,7 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
+ switchport block unicast
 [% PROCESS storm_control %]
  spanning-tree bpdufilter enable
  spanning-tree bpduguard enable
@@ -90,6 +91,7 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
+ switchport block unicast
 [% IF i.name.match('^Hu') %]
  enable
 [% END %]
@@ -108,6 +110,7 @@ interface [% i.name +%]
  description [% i.description +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
+ switchport block unicast
 [% IF port_security AND i.status != 'quarantine' %]
  switchport port-security violation protect
 [% FOREACH vlan = i.vlans %]
