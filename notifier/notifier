@@ -57,10 +57,15 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 sub template_variables {
 	my ($m) = @_;
 
+	my (undef, undef, undef, $mday, $mon, $year) = localtime(time);
+	$year += 1900;
+	my $today = "$year-$mon-$mday";
+
 	return {
 		as => $m->{asnum},
 		name => $m->{name},
 		mailto => join(', ', @{ $m->{contact_email} }),
+		today => $today,
 	};
 }
 
