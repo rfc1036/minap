@@ -121,7 +121,7 @@ sub find_ports {
 ##############################################################################
 sub build_config {
 	my ($text, $vars) = @_;
-	
+
 	my $template = Template->new(
 		POST_CHOMP => 1,
 		DEBUG_UNDEF => 1,
