@@ -29,7 +29,7 @@
     with_items:
     - { path: "/etc/systemd/system/systemd-nspawn@{{container_name}}.service.d/" }
 
-  - name: Configure systemd-spawn
+  - name: Configure systemd-nspawn
     template: src=files/nspawn-br0-ixp dest="/etc/systemd/system/systemd-nspawn@{{container_name}}.service.d/local.conf"
 
   # this is used by the main playbook to access the container
