@@ -8,9 +8,7 @@
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 
-use v5.14;
-use utf8;
-use warnings;
+use v5.36;
 
 use Net::Netrc;
 use HTTP::Tiny;
@@ -41,7 +39,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 	die "Usage: $0 SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]\n"
 		if not $switch;
-	die "Invalid switch name '$switch'!\n" if $switch !~ /^sw[2c]?-[a-z]+$/;
+	die "Invalid switch name '$switch'!\n" if $switch !~ /^swc?-[a-z]+[0-9]?$/;
 
 	my $cache;
 	$cache = path("cache-$switch.json") if $ENV{USER} and $ENV{USER} eq 'md';
@@ -67,10 +65,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 }
 
 ##############################################################################
-sub switch_data {
-	my ($switch, $cache, $ttl) = @_;
-	$ttl ||= 2 * 60 * 60;
-
+sub switch_data ($switch, $cache, $ttl = 2 * 60 * 60) {
 	if ($cache and $cache->exists) {
 		my $age = time - $cache->stat->mtime;
 		return decode_json($cache->slurp_utf8) if $age < $ttl;
@@ -82,9 +77,7 @@ sub switch_data {
 	return decode_json($json);
 }
 
-sub ixpmanager_api {
-	my ($api) = @_;
-
+sub ixpmanager_api ($api) {
 	my $url = $IXP_Manager_API . $api;
 
 	my $http = HTTP::Tiny->new(verify_SSL => 1);
@@ -102,9 +95,7 @@ sub ixpmanager_api {
 	return $response->{content};
 }
 
-sub find_ports {
-	my ($data, $search) = @_;
-
+sub find_ports ($data, $search) {
 	my @ports;
 	foreach my $port (@{ $data->{layer2interfaces} }) {
 		next if $port->{type} ne 'edge';
@@ -123,9 +114,7 @@ sub find_ports {
 }
 
 ##############################################################################
-sub build_config {
-	my ($text, $vars) = @_;
-
+sub build_config ($text, $vars) {
 	my $template = Template->new(
 		POST_CHOMP => 1,
 		DEBUG_UNDEF => 1,
@@ -137,9 +126,7 @@ sub build_config {
 	return;
 }
 
-sub ixp_manager_api_key {
-	my ($url) = @_;
-
+sub ixp_manager_api_key ($url) {
 	my $machine = Net::Netrc->lookup($url);
 	die "No password found in .netrc for $url!\n"
 		if not $machine;
