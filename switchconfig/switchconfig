@@ -189,12 +189,60 @@ switchconfig - generates configuration fragments from IXP Manager data
 
 =head1 SYNOPSIS
 
-switchconfig SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]
+switchconfig ACTION config [PORT_NUMBER|MEMBER_NAME]
+
+switchconfig ACTION [cull-bgp|cull-bgp-off] [PORT_NUMBER|MEMBER_NAME]
 
 =head1 DESCRIPTION
 
 This program generates the configuration for a customer port using data
 provided by the IXP Manager API.
+
+The port can be specified by:
+
+=over 2
+
+=item * full name (e.g. I<TenGigabitEthernet1/0/1>),
+
+=item * short name (e.g. I<Te1/0/1>),
+
+=item * port number (e.g. I<1>), or
+
+=item * member name (e.g. I<Seeweb>).
+
+=back
+
+If no port is specified then the configuration is generated for all ports
+of that switch.
+
+=head1 OPTIONS
+
+Valid actions are:
+
+=over 8
+
+=item B<config>
+
+Generates the configuration for a member port.
+
+=item B<cull-bgp>
+
+Generates the configuration to enable BGP sessions culling
+(L<BCP 214|https://www.rfc-editor.org/rfc/rfc8327.html>) for maintenance.
+
+=item B<cull-bgp-off>
+
+Generates the configuration to disable BGP sessions culling.
+
+=item B<--help>
+
+Prints a short help text.
+
+=item B<--man>
+
+Prints the man page.
+
+=back
 
 =head1 AUTHOR
 
