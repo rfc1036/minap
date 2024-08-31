@@ -32,10 +32,17 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 ##############################################################################
 {
-	my ($switch, $port) = @ARGV;
+	my ($action, $switch, $port) = @ARGV;
+	usage(1) if not $action;
 
-	die "Usage: $0 SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]\n"
-		if not $switch or not $port;
+	if ($action =~ /^(?:-h|--help|help)$/) {
+		usage(0);
+	} elsif ($action eq 'config') {
+		usage(1) if not $switch or not $port;
+	} else {
+		die "Unknown action '$action'!\n";
+	}
+
 	die "Invalid switch name '$switch'!\n" if $switch !~ /^swc?-[a-z]+[0-9]?$/;
 
 	my $cache;
@@ -44,11 +51,20 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	die 'Not enough interfaces' if not @{ $l2->{layer2interfaces} } > 0;
 	#use DDP; p $l2; exit;
 
-	switchconfig($switch, $l2, $port);
+	if ($action eq 'config') {
+		switchconfig($switch, $l2, $port);
+	}
 
 	exit;
 }
 
+sub usage ($rc ||= 0) {
+	my $fh = $rc > 0 ? \*STDERR : \*STDOUT;
+	print $fh "Usage: $0 ACTION SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]\n";
+	exit $rc;
+}
+
+##############################################################################
 sub switchconfig ($switch, $l2, $port) {
 	my $ports = find_ports($l2, $port);
 	die "Port '$port' not found on $switch!\n" if not @$ports;
