@@ -58,12 +58,13 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	die 'Not enough interfaces' if not @{ $l2->{layer2interfaces} } > 0;
 	#use DDP; p $l2; exit;
 
+	$params{switch} = $switch;
 	$params{switch_vendor} = lc($Switch_Vendor{$switch} || 'ios');
 
 	if ($action eq 'config') {
-		switchconfig($switch, $l2, $port, \%params);
+		switchconfig($l2, $port, \%params);
 	} elsif ($action eq 'cull-bgp') {
-		cull_bgp($switch, $l2, $port, \%params);
+		cull_bgp($l2, $port, \%params);
 	}
 
 	exit;
@@ -76,15 +77,14 @@ sub usage ($rc ||= 0) {
 }
 
 ##############################################################################
-sub switchconfig ($switch, $l2, $port, $params //= {}) {
+sub switchconfig ($l2, $port, $params //= {}) {
 	my $ports = find_ports($l2, $port);
-	die "Port '$port' not found on $switch!\n" if not @$ports;
+	die "Port '$port' not found on $params->{switch}!\n" if not @$ports;
 	#use DDP; p $ports;
 
 	my $template_file = "minap-l2-$params->{switch_vendor}.tt2";
 	my $template = path($template_file)->slurp_utf8;
 	build_config(\$template, {
-		switch => $switch,
 		ports => $ports,
 		mac_acl_only => 0,
 		port_security => 1,
@@ -93,15 +93,14 @@ sub switchconfig ($switch, $l2, $port, $params //= {}) {
 	return;
 }
 
-sub cull_bgp ($switch, $l2, $port, $params //= {}) {
+sub cull_bgp ($l2, $port, $params //= {}) {
 	my $ports = find_ports($l2, $port, { type => 'edge' });
-	die "Port '$port' not found on $switch!\n" if not @$ports;
+	die "Port '$port' not found on $params->{switch}!\n" if not @$ports;
 	#use DDP; p $ports;
 
 	my $template_file = 'minap-cull.tt2';
 	my $template = path($template_file)->slurp_utf8;
 	build_config(\$template, {
-		switch => $switch,
 		ports => $ports,
 		%$params,
 	});
