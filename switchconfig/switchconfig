@@ -153,8 +153,10 @@ sub find_ports ($data, $search, $search_params = {}) {
 		}
 		push(@ports, $port)
 			if  not defined $search or
-				($search =~ /^\d+$/
-					and $port->{name} =~ /^Te1\/0\/$search$/) or
+				($search =~ /^\d+(?:\/[0-4])?$/
+					and $port->{name} =~ /^(?:Te1\/0\/|XGigabitEthernet0\/0\/|Ethernet)$search$/) or
+				($search =~ /^Et(?:hernet)?(\d+(?:\/[1-4])?)$/
+					and $port->{name} =~ /^Ethernet${1}$/) or
 				($search =~ /^Te(?:nGigabitEthernet)?1\/0\/\d+$/
 					and $port->{name} =~ /^Te1\/0\/$search$/) or
 				($search =~ /^Po(?:rt-channel)?(\d+)$/
