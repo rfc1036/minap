@@ -79,9 +79,8 @@ sub switchconfig ($switch, $l2, $port) {
 	die "Port '$port' not found on $switch!\n" if not @$ports;
 	#use DDP; p $ports;
 
-	my $template_file = 'minap-l2.tt2';
-	$template_file = 'minap-l2-' . lc($Switch_Vendor{$switch}) . '.tt2'
-		if exists $Switch_Vendor{$switch};
+	my $vendor = lc($Switch_Vendor{$switch} || 'ios');
+	my $template_file = "minap-l2-$vendor.tt2";
 	my $template = path($template_file)->slurp_utf8;
 	build_config(\$template, {
 		switch => $switch,
