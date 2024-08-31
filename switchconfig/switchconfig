@@ -76,7 +76,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	exit;
 }
 
-sub usage ($rc ||= 0) {
+sub usage ($rc = 0) {
 	pod2usage(
 		-verbose => 0,
 		-exitstatus => $rc,
@@ -85,7 +85,7 @@ sub usage ($rc ||= 0) {
 }
 
 ##############################################################################
-sub switchconfig ($l2, $port, $params //= {}) {
+sub switchconfig ($l2, $port, $params = {}) {
 	my $ports = find_ports($l2, $port);
 	die "Port '$port' not found on $params->{switch}!\n" if not @$ports;
 	#use DDP; p $ports;
@@ -99,7 +99,7 @@ sub switchconfig ($l2, $port, $params //= {}) {
 	return;
 }
 
-sub cull_bgp ($l2, $port, $params //= {}) {
+sub cull_bgp ($l2, $port, $params = {}) {
 	my $ports = find_ports($l2, $port, { type => 'edge' });
 	die "Port '$port' not found on $params->{switch}!\n" if not @$ports;
 	#use DDP; p $ports;
@@ -144,7 +144,7 @@ sub ixpmanager_api ($api) {
 	return $response->{content};
 }
 
-sub find_ports ($data, $search, $search_params //= {}) {
+sub find_ports ($data, $search, $search_params = {}) {
 	my @ports;
 	foreach my $port (@{ $data->{layer2interfaces} }) {
 		foreach my ($search_param, $search_value) (%$search_params) {
