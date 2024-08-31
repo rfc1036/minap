@@ -55,7 +55,8 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	my $cache;
 	$cache = path("cache-$switch.json") if $ENV{USER} and $ENV{USER} eq 'md';
 	my $l2 = switch_data($switch, $cache);
-	die 'Not enough interfaces' if not @{ $l2->{layer2interfaces} } > 0;
+	die "Not interfaces found on $switch"
+		if not @{ $l2->{layer2interfaces} } > 0;
 	#use DDP; p $l2; exit;
 
 	$params{switch} = $switch;
