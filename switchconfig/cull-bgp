@@ -9,6 +9,7 @@
 # (at your option) any later version.
 
 use v5.36;
+use experimental qw(for_list);
 
 use Net::Netrc;
 use HTTP::Tiny;
@@ -47,7 +48,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	die 'Not enough interfaces' if not @{ $l2->{layer2interfaces} } > 0;
 	#use DDP; p $l2; exit;
 
-	my $ports = find_ports($l2, $port);
+	my $ports = find_ports($l2, $port, { type => 'edge' });
 	die "Port '$port' not found on $switch!\n" if not @$ports;
 	#use DDP; p $ports;
 
@@ -95,10 +96,13 @@ sub ixpmanager_api ($api) {
 	return $response->{content};
 }
 
-sub find_ports ($data, $search) {
+sub find_ports ($data, $search, $search_params //= {}) {
 	my @ports;
 	foreach my $port (@{ $data->{layer2interfaces} }) {
-		next if $port->{type} ne 'edge';
+		foreach my ($search_param, $search_value) (%$search_params) {
+			next if defined $port->{$search_param}
+				and $port->{$search_param} ne $search_value;
+		}
 		push(@ports, $port)
 			if  not defined $search or
 				($search =~ /^\d+$/

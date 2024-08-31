@@ -9,6 +9,7 @@
 # (at your option) any later version.
 
 use v5.36;
+use experimental qw(for_list);
 
 use Net::Netrc;
 use HTTP::Tiny;
@@ -92,9 +93,13 @@ sub ixpmanager_api ($api) {
 	return $response->{content};
 }
 
-sub find_ports ($data, $search) {
+sub find_ports ($data, $search, $search_params //= {}) {
 	my @ports;
 	foreach my $port (@{ $data->{layer2interfaces} }) {
+		foreach my ($search_param, $search_value) (%$search_params) {
+			next if defined $port->{$search_param}
+				and $port->{$search_param} ne $search_value;
+		}
 		push(@ports, $port)
 			if  not defined $search or
 				($search =~ /^\d+$/
