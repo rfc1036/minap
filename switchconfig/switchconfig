@@ -35,10 +35,17 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	my ($action, $switch, $port) = @ARGV;
 	usage(1) if not $action;
 
+	my %params;
 	if ($action =~ /^(?:-h|--help|help)$/) {
 		usage(0);
 	} elsif ($action eq 'config') {
 		usage(1) if not $switch or not $port;
+	} elsif ($action eq 'cull-bgp') {
+		usage(1) if not $switch;
+	} elsif ($action eq 'cull-bgp-off') {
+		usage(1) if not $switch;
+		$params{culling} = 'off';
+		$action = 'cull-bgp';
 	} else {
 		die "Unknown action '$action'!\n";
 	}
@@ -53,6 +60,8 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 	if ($action eq 'config') {
 		switchconfig($switch, $l2, $port);
+	} elsif ($action eq 'cull-bgp') {
+		cull_bgp($switch, $l2, $port, \%params);
 	}
 
 	exit;
@@ -79,6 +88,23 @@ sub switchconfig ($switch, $l2, $port) {
 		ports => $ports,
 		mac_acl_only => 0,
 		port_security => 1,
+	});
+	return;
+}
+
+sub cull_bgp ($switch, $l2, $port, $params //= {}) {
+	my $ports = find_ports($l2, $port, { type => 'edge' });
+	die "Port '$port' not found on $switch!\n" if not @$ports;
+	#use DDP; p $ports;
+
+	my $template_file = 'minap-cull.tt2';
+	my $vendor = lc($Switch_Vendor{$switch} || 'ios');
+	my $template = path($template_file)->slurp_utf8;
+	build_config(\$template, {
+		switch => $switch,
+		ports => $ports,
+		switch_vendor => $vendor,
+		%$params,
 	});
 	return;
 }
