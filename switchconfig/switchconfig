@@ -11,6 +11,7 @@
 use v5.36;
 use experimental qw(for_list);
 
+use Pod::Usage;
 use Net::Netrc;
 use HTTP::Tiny;
 use Path::Tiny;
@@ -37,7 +38,11 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 	my %params;
 	if ($action =~ /^(?:-h|--help|help)$/) {
-		usage(0);
+        pod2usage(-verbose => 1, -exitstatus => 0);
+    } elsif ($action =~ /^(?:--man|man)$/) {
+		$ENV{PERLDOC_PAGER} = 'less -R'
+			unless $ENV{PAGER} and $ENV{PAGER} ne 'less';
+        pod2usage(-verbose => 2, -exitstatus => 0);
 	} elsif ($action eq 'config') {
 		usage(1) if not $switch or not $port;
 	} elsif ($action eq 'cull-bgp') {
@@ -72,9 +77,11 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 }
 
 sub usage ($rc ||= 0) {
-	my $fh = $rc > 0 ? \*STDERR : \*STDOUT;
-	print $fh "Usage: $0 ACTION SWITCH_NAME [PORT_NUMBER|CUSTOMER_NAME]\n";
-	exit $rc;
+	pod2usage(
+		-verbose => 0,
+		-exitstatus => $rc,
+		-output => ($rc == 0 ? \*STDOUT : \*STDERR),
+	);
 }
 
 ##############################################################################
