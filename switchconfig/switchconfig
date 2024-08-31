@@ -59,7 +59,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 	#use DDP; p $l2; exit;
 
 	if ($action eq 'config') {
-		switchconfig($switch, $l2, $port);
+		switchconfig($switch, $l2, $port, \%params);
 	} elsif ($action eq 'cull-bgp') {
 		cull_bgp($switch, $l2, $port, \%params);
 	}
@@ -74,7 +74,7 @@ sub usage ($rc ||= 0) {
 }
 
 ##############################################################################
-sub switchconfig ($switch, $l2, $port) {
+sub switchconfig ($switch, $l2, $port, $params //= {}) {
 	my $ports = find_ports($l2, $port);
 	die "Port '$port' not found on $switch!\n" if not @$ports;
 	#use DDP; p $ports;
@@ -87,6 +87,7 @@ sub switchconfig ($switch, $l2, $port) {
 		ports => $ports,
 		mac_acl_only => 0,
 		port_security => 1,
+		%$params,
 	});
 	return;
 }
