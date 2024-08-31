@@ -87,8 +87,6 @@ sub switchconfig ($l2, $port, $params //= {}) {
 	my $template = path($template_file)->slurp_utf8;
 	build_config(\$template, {
 		ports => $ports,
-		mac_acl_only => 0,
-		port_security => 1,
 		%$params,
 	});
 	return;

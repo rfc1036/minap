@@ -111,7 +111,7 @@ interface [% i.name +%]
  switchport access vlan [% vlan_number(i) +%]
  switchport mode access
  switchport block unicast
-[% IF port_security AND i.status != 'quarantine' %]
+[% IF i.status != 'quarantine' %]
  switchport port-security violation protect
 [% FOREACH vlan = i.vlans %]
 [% IF vlan.macaddresses.size %]
