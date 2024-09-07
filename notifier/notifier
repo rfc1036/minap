@@ -61,8 +61,11 @@ sub template_variables {
 	$year += 1900;
 	my $today = "$year-$mon-$mday";
 
+	my @vlans = map { @$_ } map { $_->{vlan_list} } @{ $m->{connection_list} };
 	return {
 		as => $m->{asnum},
+		ipv4 => [ map { $_->{address} } map { $_->{ipv4} } @vlans ],
+		ipv6 => [ map { $_->{address} } map { $_->{ipv6} } @vlans ],
 		name => $m->{name},
 		mailto => join(', ', @{ $m->{contact_email} }),
 		today => $today,
