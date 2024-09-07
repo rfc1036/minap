@@ -1,9 +1,9 @@
 [%
   MACRO disable IF culling == 'off';
-    IF switch_vendor == 'ios';
-      'no ';
-    ELSIF switch_vendor == 'huawei';
+    IF switch_vendor == 'huawei';
       'undo ';
+    ELSE;
+      'no ';
     END;
   ELSE;
     '';
@@ -27,6 +27,17 @@ interface [% i.name +%]
  [% disable %]ipv6 traffic-filter BGP6-CULLING in
 [% END %]
 exit
+exit
+[% ELSIF switch_vendor == 'arista' %]
+configure
+
+[% FOREACH i = ports %]
+[% NEXT IF i.lagframing AND NOT i.lagmaster %]
+interface [% i.name +%]
+   [% disable %]ip access-group BGP-CULLING in
+   [% disable %]ipv6 access-group BGP6-CULLING in
+[% END %]
+   exit
 exit
 [% ELSIF switch_vendor == 'huawei' %]
 system-view

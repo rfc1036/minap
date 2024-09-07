@@ -22,6 +22,9 @@ use JSON::XS;
 my %Switch_Vendor = (
 	'sw-mynet'		=> 'Huawei',
 	'swc-seeweb'	=> 'Huawei',
+	'sw-metrolink3'	=> 'Arista',
+	'sw-telnet2'	=> 'Arista',
+	'sw-seeweb3'	=> 'Arista',
 );
 
 # This is the IXP Manager API endpoint. Add to your ~/.netrc a section like:
