@@ -95,8 +95,10 @@ interface [% i.name +%]
 [% IF i.name.match('^Hu') %]
  enable
 [% END %]
-[% PROCESS storm_control %]
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+[% PROCESS storm_control %]
+ no lldp transmit
+ no lldp receive
  channel-group [% i.lagindex %] mode active
  spanning-tree bpdufilter enable
  spanning-tree bpduguard enable
@@ -131,8 +133,10 @@ interface [% i.name +%]
 [% IF i.name.match('^Hu') %]
  enable
 [% END %]
-[% PROCESS storm_control %]
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+[% PROCESS storm_control %]
+ no lldp transmit
+ no lldp receive
  spanning-tree bpdufilter enable
  spanning-tree bpduguard enable
  service-policy output SINGLE-BUFFER

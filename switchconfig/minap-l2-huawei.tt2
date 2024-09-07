@@ -89,6 +89,7 @@ interface [% i.name +%]
 interface [% i.name +%]
  description [% i.description +%]
  eth-trunk [% i.lagindex +%]
+ undo lldp enable
  multicast-suppression packets 100
  broadcast-suppression packets 100
  unicast-suppression block outbound
@@ -103,6 +104,7 @@ interface [% i.name +%]
  port default vlan [% vlan_number(i) +%]
  stp bpdu-filter enable
  traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
+ undo lldp enable
  multicast-suppression packets 100
  broadcast-suppression packets 100
  unicast-suppression block outbound
