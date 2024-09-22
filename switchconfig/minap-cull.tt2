@@ -35,7 +35,7 @@ system-view
 [% NEXT IF i.lagframing AND NOT i.lagmaster %]
 interface [% i.name +%]
  [% disable %]traffic-filter inbound acl name BGP-CULLING
- [% disable %]traffic-filter inbound acl ipv6 name BGP-CULLING
+ [% disable %]traffic-filter inbound acl ipv6 name BGP6-CULLING
 [% END %]
 quit
 quit
