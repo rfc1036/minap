@@ -38,9 +38,6 @@ acl name MEMBER[% i.virtualinterfaceid %]-IN link
  rule 91 permit l2-protocol ip
  rule 92 permit l2-protocol ipv6
 [% END %]
-[% IF i.lagframing %]
- rule 95 permit l2-protocol 0x8809 destination-mac 0180-c200-0002
-[% END %]
  rule 99 deny
 
 [% END %]
