@@ -1,0 +1,63 @@
+[% i = ports.0 %]
+
+ ssh [% switch %].minap.it
+
+! Please cut and paste:
+! ----8<----------------------------------------------------------------------
+[% IF switch_vendor == 'ios' %]
+configure terminal
+
+interface [% i.name +%]
+ shutdown
+ no channel-group
+ no description
+ no ip access-group BGP-CULLING in
+ no ipv6 traffic-filter BGP6-CULLING in
+ no mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+ no service-policy output SINGLE-BUFFER
+ no speed
+ no storm-control broadcast level
+ no storm-control multicast level
+ lldp transmit
+ lldp receive
+ no channel-group
+ lldp transmit
+ lldp receive
+ no spanning-tree bpdufilter enable
+ no spanning-tree bpduguard enable
+ no switchport
+ switchport
+exit
+exit
+[% ELSIF switch_vendor == 'arista' %]
+configure
+
+interface ...
+ shutdown
+
+[% ELSIF switch_vendor == 'huawei' %]
+system-view
+
+interface [% i.name +%]
+ shutdown
+ undo description
+ undo eth-trunk
+ undo port link-type
+ y
+ undo stp bpdu-filter
+ undo traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
+ undo mtu
+ undo ip address
+ undo ospf network-type
+ undo ospf enable 43369 area 0.0.0.0
+ lldp enable
+ undo qos micro-burst detection enable
+ undo unicast-suppression block outbound
+ undo multicast-suppression
+ undo broadcast-suppression
+ portswitch
+[% ELSE %]
+[% THROW 'unknown switch vendor!' %]
+[% END %]
+
+! ----8<----------------------------------------------------------------------

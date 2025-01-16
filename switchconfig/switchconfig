@@ -48,6 +48,8 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
         pod2usage(-verbose => 2, -exitstatus => 0);
 	} elsif ($action eq 'config') {
 		usage(1) if not $switch or not $port;
+	} elsif ($action eq 'deconfig') {
+		usage(1) if not $switch;
 	} elsif ($action eq 'cull-bgp') {
 		usage(1) if not $switch;
 	} elsif ($action eq 'cull-bgp-off') {
@@ -72,6 +74,8 @@ my $IXP_Manager_API = 'https://manager.minap.it/api/';
 
 	if ($action eq 'config') {
 		switchconfig($l2, $port, \%params);
+	} elsif ($action eq 'deconfig') {
+		switchdeconfig($l2, $port, \%params);
 	} elsif ($action eq 'cull-bgp') {
 		cull_bgp($l2, $port, \%params);
 	}
@@ -108,6 +112,19 @@ sub cull_bgp ($l2, $port, $params = {}) {
 	#use DDP; p $ports;
 
 	my $template_file = 'minap-cull.tt2';
+	my $template = path($template_file)->slurp_utf8;
+	build_config(\$template, {
+		ports => $ports,
+		%$params,
+	});
+	return;
+}
+
+sub switchdeconfig ($l2, $port, $params = {}) {
+	my $ports = find_ports($l2, $port) if $port;
+	$ports ||= [ { name => '...', virtualinterfaceid => 999 } ];
+
+	my $template_file = 'minap-deconfig.tt2';
 	my $template = path($template_file)->slurp_utf8;
 	build_config(\$template, {
 		ports => $ports,
