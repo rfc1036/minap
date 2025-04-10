@@ -83,10 +83,6 @@ footer > div, footer > div > a {
         <h2>News</h2>
 [% PROCESS inc/news.html %]
       </div>
-      <div id="partners" class="p-3 mb-5 shadow rounded">
-        <h2><a href="[% site.url.root %]/partners/" class="text-reset text-decoration-none">Partners</a></h2>
-[% PROCESS inc/partners.html %]
-      </div>
     </div>
 
   </div>
