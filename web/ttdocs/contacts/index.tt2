@@ -5,8 +5,7 @@
 %]
 [% WRAPPER htmlpage %]
 <p>MINAP is not a legal entity: all the parts that together make the
-MINAP infrastructure are operated by the MINAP NOC but still owned by
-the respective <a href="[% site.url.root %]/partners/">sponsors</a>.</p>
+MINAP infrastructure are operated by the MINAP NOC.</p>
 
 <address class="vcard">
 <span class="fn org">
