@@ -1,0 +1,23 @@
+- hosts: server1.minap.it
+  gather_facts: false
+
+  tasks:
+    - name: Install the scripts in sbin
+      copy:
+        src: "{{item}}"
+        dest: /usr/local/sbin/
+        mode: '0755'
+      with_items:
+        - python3-container
+
+    - name: Create symlinks for the python3-$container programs
+      file:
+        state: link
+        src: python3-container
+        dest: /usr/local/sbin/python3-{{item}}
+      with_items:
+        - as112
+        - manager
+        - rs1
+        - sponge
+

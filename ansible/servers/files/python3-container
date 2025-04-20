@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+name="${0##*/}"
+name="${name#python3-}"
+
+exec \
+systemd-run --wait --collect --pipe --quiet \
+  --service-type=exec --machine="$name" \
+  python3 "$@"
+
