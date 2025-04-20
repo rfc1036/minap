@@ -51,3 +51,13 @@ scrape_configs:
       - targets: ['localhost:9144']
 ```
 
+## Installation of the IXP Manager integration
+
+```sh
+ansible-playbook install_graphs.yaml
+```
+
+The `prometheus-proxy.foil.php` page is a simple proxy which validates
+the Prometheus API calls used by the Javascript frontend to access the
+sflow metrics.
+

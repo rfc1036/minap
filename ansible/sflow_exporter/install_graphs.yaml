@@ -1,0 +1,11 @@
+- name: Install the IXP manager components
+  hosts: manager
+  gather_facts: false
+
+  tasks:
+    - name: Install the IXP manager components
+      copy: src=php/{{item.src}} dest=/srv/ixpmanager/{{item.dest}}
+      with_items:
+        - { src: layer2addresses.foil.php, dest: resources/skins/minap/content/members/0/ }
+        - { src: prometheus-proxy.foil.php, dest: resources/skins/minap/content/1/ }
+
