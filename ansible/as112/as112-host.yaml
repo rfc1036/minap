@@ -32,10 +32,6 @@
   - name: Configure systemd-nspawn
     template: src=files/nspawn-br0-ixp dest="/etc/systemd/system/systemd-nspawn@{{container_name}}.service.d/local.conf"
 
-  # this is used by the main playbook to access the container
-  - name: Install the machinectl wrapper
-    template: src=files/python3-wrapper dest="/usr/local/sbin/python3-{{container_name}}"
-
   handlers:
   - name: Restart systemd-networkd
     systemd: name=systemd-networkd state=restarted

@@ -1,2 +1,0 @@
-#!/bin/sh -e
-exec systemd-run --quiet --pipe --machine={{container_name}} --service-type=exec /usr/bin/python3 "$@"
