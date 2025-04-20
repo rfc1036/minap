@@ -136,6 +136,9 @@
     - name: Configure BIRD
       import_role: name=bird2
 
+    - name: Configure the netconsole to server1
+      copy: src=netconsole dest=/etc/network/ mode='0755'
+
   handlers:
     - name: Reload the sysctls
       systemd: name=systemd-sysctl state=restarted

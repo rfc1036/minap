@@ -21,3 +21,11 @@
         - rs1
         - sponge
 
+    - name: Configure rsyslog to receive the server2 netconsole
+      copy: src=netconsole.conf dest=/etc/rsyslog.d/
+      notify: Restart rsyslog
+
+  handlers:
+  - name: Restart rsyslog
+    systemd: name=rsyslog state=restarted
+

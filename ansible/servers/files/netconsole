@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+[ -d /sys/kernel/config/netconsole/ ] || modprobe netconsole
+cd /sys/kernel/config/netconsole/
+
+if [ -d server1 ]; then rmdir server1; fi
+
+mkdir server1
+cd server1
+
+REMOTE_IP='10.9.9.254'
+
+LOCAL_IP="$(ip -o route get $REMOTE_IP | egrep -o '\<src [^ ]+' | cut -d ' ' -f 2)"
+LOCAL_IF="$(ip -o route get $REMOTE_IP | egrep -o '\<dev [^ ]+' | cut -d ' ' -f 2)"
+GATEWAY="$(ip -o route get $REMOTE_IP | egrep -o '\<via [^ ]+' | cut -d ' ' -f 2)"
+REMOTE_MAC="$(ip -o neigh show $GATEWAY | egrep -o '\<lladdr [^ ]+' | cut -d ' ' -f 2)"
+
+echo $LOCAL_IF > dev_name
+echo $LOCAL_IP > local_ip
+echo $REMOTE_IP > remote_ip
+echo $REMOTE_MAC > remote_mac
+echo 514 > remote_port
+echo 1 > enabled
+
