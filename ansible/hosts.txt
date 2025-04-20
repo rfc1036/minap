@@ -1,0 +1,23 @@
+[servers]
+server1.minap.it	ansible_user=root
+server2.minap.it	ansible_user=root
+
+# containers
+manager.minap.it	ansible_user=root ansible_host=server1.minap.it ansible_python_interpreter=python3-manager
+as112.minap.it		ansible_user=root ansible_host=server1.minap.it ansible_python_interpreter=python3-as112
+
+# bare containers
+blackhole.minap.it	ansible_user=root ansible_host=server1.minap.it root_dir=/var/lib/machines/blackhole/
+
+[as112_hosts]
+server1.minap.it
+
+[as112_servers]
+as112.minap.it
+
+[collector]
+server1.minap.it
+
+[manager]
+manager.minap.it
+
