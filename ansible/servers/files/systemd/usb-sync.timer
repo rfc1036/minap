@@ -1,0 +1,8 @@
+[Unit]
+Description=USB storage backup
+
+[Timer]
+OnCalendar=*-*-* 5:12
+
+[Install]
+WantedBy=timers.target

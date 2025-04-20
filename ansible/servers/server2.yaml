@@ -10,10 +10,20 @@
       with_items:
         - /etc/systemd/system/rpki-client.service.d/
 
-    - name: Configure the systemd drop-ins
+    - name: Install the scripts in sbin
+      copy:
+        src: "{{item}}"
+        dest: /usr/local/sbin/
+        mode: '0755'
+      with_items:
+        - usb-sync
+
+    - name: Configure the systemd units
       copy: src=files/systemd/{{item.src}} dest=/etc/systemd/system/{{item.dest}}
       with_items:
         - { src: nice.conf, dest: rpki-client.service.d/ }
+        - { src: usb-sync.service, dest: usb-sync.service }
+        - { src: usb-sync.timer, dest: usb-sync.timer }
       notify: Reload the systemd configuration
 
     - name: Remove some unneeded standard packages

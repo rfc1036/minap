@@ -1,0 +1,23 @@
+#!/bin/sh -e
+# This script backups the root and /boot/ file systems to the second USB stick.
+
+# make it as low priority as possible
+chrt --idle --pid 0 $$
+ionice -c3 --pid $$
+renice 19 --pid $$ > /dev/null
+
+# do not waste RAM trying to cache the files being copied
+export LD_PRELOAD="/usr/lib/nocache/nocache.so $LD_PRELOAD"
+
+set +e
+rsync -aHSAX --numeric-ids --delete --one-file-system /boot/firmware/ /ALT/boot/firmware/copia/
+rsync -aHSAX --numeric-ids --delete --one-file-system / /ALT/
+rc=$?
+
+# ignore any source files that may have disappeared during the copy
+if [ "$rc" = 24 ]; then
+  rc=0
+fi
+
+exit $rc
+

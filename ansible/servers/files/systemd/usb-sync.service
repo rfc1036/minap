@@ -1,0 +1,7 @@
+[Unit]
+Description=USB storage backup
+
+[Service]
+Type=oneshot
+Environment=HOME=/root
+ExecStart=/usr/local/sbin/usb-sync
