@@ -1,0 +1,121 @@
+#!/usr/bin/perl
+# vim: shiftwidth=4 tabstop=4
+#
+# Copyright by Marco d'Itri <md@linux.it>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# The program updates the list of routers in the configuration of
+# sflow_exporter with data from IXP manager.
+# The configuration is rewritten only when there are changes.
+
+use v5.36;
+use utf8;
+use open qw(:std :utf8);
+
+use HTTP::Tiny;
+use Path::Tiny;
+use JSON::XS;
+use YAML::XS;
+
+my $IXP_Manager_Base = 'https://manager.minap.it';
+
+# Abort if the downloaded L2 data contains less than this entries.
+# This prevents generating a broken configuration if the API has returned
+# incomplete data.
+my $Minimum_Routers = 50;
+
+##############################################################################
+{
+	my $config_file = $ARGV[0] or die "Usage: $0 CONFIG_FILE.YAML\n";
+	$config_file = path($config_file);
+
+    my $url = "$IXP_Manager_Base/content/members/0/layer2addresses.json";
+	my $l2data = get_l2_data($url);
+	update_exporter_config($config_file, $l2data);
+
+	exit(0);
+}
+
+##############################################################################
+sub update_exporter_config ($file, $l2data) {
+	my @macs = map {
+		my $e = $_;
+		map { [ $_, $e->{shortname} ] } @{ $e->{layer2addresses} }
+	} @$l2data;
+
+	my $num = @macs;
+	die "The downloaded data contains only $num routers,"
+			. " while at least $Minimum_Routers\nare expected!\n"
+		if $num < $Minimum_Routers;
+
+	my $configuration;
+	if ($file->exists) {
+		# load the current configuration
+		$configuration = Load($file->slurp_raw);
+	} else {
+		# start with a minimal configuration
+		$configuration = {
+			agents => [],
+			routers => [],
+			ether_types => {
+				'0x0800' => { label => 'IPv4' },
+				'0x86DD' => { label => 'IPv6' },
+			},
+		};
+	}
+
+	my @cur_routers =
+		sort { $a->{mac} cmp $b->{mac} }
+		@{ $configuration->{routers} };
+	my @new_routers =
+		sort { $a->{mac} cmp $b->{mac} }
+		map { { mac => $_->[0], label => $_->[1] } } @macs;
+
+	# do not update the file if there are no changes
+	if (@cur_routers == @new_routers) {
+		my $changed = 0;
+		for (my $i = 0; $i < @cur_routers; $i++) {
+			next if $cur_routers[$i]->{label} eq $new_routers[$i]->{label}
+				and $cur_routers[$i]->{mac}   eq $new_routers[$i]->{mac};
+			$changed = 1;
+			last;
+		}
+		return if not $changed;
+	}
+
+	# replace the routers section with the data from the API
+	$configuration->{routers} = \@new_routers;
+
+	# update the configurarion file
+	my $yaml = Dump($configuration);
+	$file->spew_raw($yaml);
+
+	return;
+}
+
+##############################################################################
+sub get_l2_data ($url) {
+	return decode_json(get_l2_json($url));
+}
+
+sub get_l2_json ($url) {
+	# use a local cache if it exists (for testing)
+	my $cache = path('cache')->path('layer2addresses.json');
+	return $cache->slurp_raw if $cache->exists;
+
+	my $http = HTTP::Tiny->new(verify_SSL => 1);
+	my $response = $http->get($url);
+
+    $response->{content} =~ s/\n$// if $response->{status} == 599;
+    die "Could not download $url: "
+            . ($response->{status} == 599 ? $response->{content}
+            : "$response->{status} $response->{reason}") . "!\n"
+        if not $response->{success};
+
+    return $response->{content};
+}
+

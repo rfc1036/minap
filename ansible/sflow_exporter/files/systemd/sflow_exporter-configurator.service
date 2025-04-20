@@ -1,0 +1,6 @@
+[Unit]
+Description=Update the sflow_exporter configuration
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/sflow_exporter-configurator /etc/prometheus/sflow_exporter.yaml

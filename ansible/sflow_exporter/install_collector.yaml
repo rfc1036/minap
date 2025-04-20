@@ -1,0 +1,45 @@
+- name: Configure the sflow collector
+  hosts: collector
+  gather_facts: false
+
+  tasks:
+    - name: Check if there is an exporter binary to be installed
+      stat: path=sflow_exporter/target/release/sflow_exporter
+      delegate_to: localhost
+      register: rc
+
+    - name: Install the exporter binary
+      copy:
+        src: sflow_exporter/target/release/sflow_exporter
+        dest: /usr/local/sbin/prometheus-sflow-exporter
+      when: rc.stat.exists
+      notify: Restart prometheus-sflow-exporter
+
+    - name: Install the configuration generator
+      copy:
+        src: sflow_exporter-configurator
+        dest: /usr/local/sbin/
+        mode: '0755'
+
+    - name: Install then systemd units
+      copy:
+        src: systemd/{{item}}
+        dest: /etc/systemd/system/
+      with_items:
+        - prometheus-sflow-exporter.service
+        - sflow_exporter-configurator.service
+        - sflow_exporter-configurator.timer
+      notify: Reload the systemd configuration
+
+    - name: Enable the systemd units
+      systemd: name={{item}} enabled=yes state=started
+      with_items:
+        - prometheus-sflow-exporter.service
+        - sflow_exporter-configurator.timer
+
+  handlers:
+    - name: Reload the systemd configuration
+      systemd: daemon_reload=yes
+    - name: Restart prometheus-sflow-exporter
+      systemd: name=prometheus-sflow-exporter state=restarted
+

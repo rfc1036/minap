@@ -1,0 +1,8 @@
+[Unit]
+Description=Update the sflow_exporter configuration
+
+[Timer]
+OnCalendar=hourly
+
+[Install]
+WantedBy=timers.target
