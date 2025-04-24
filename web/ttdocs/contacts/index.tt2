@@ -7,18 +7,6 @@
 <p>MINAP is not a legal entity: all the parts that together make the
 MINAP infrastructure are operated by the MINAP NOC.</p>
 
-<address class="vcard">
-<span class="fn org">
-MINAP
-</span><br>
-<span class="adr">
-c/o Telnet s.r.l.<br>
-<span class="street-address">Via Caldera 21 - Edificio F</span><br>
-<span class="postal-code">20153</span> <span class="locality">Milano (MI)</span><br>
-<span class="country-name">Italy</span><br>
-</span>
-</address>
-
 <ul style="margin-top: 2em">
 <li><strong>Technical support:</strong> <a href="mailto:noc@minap.it">noc@minap.it</a></li>
 <li><strong>General information:</strong> <a href="mailto:info@minap.it">info@minap.it</a></li>
