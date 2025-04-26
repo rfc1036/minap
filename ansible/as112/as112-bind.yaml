@@ -19,6 +19,8 @@
 
   - name: Enable all interfaces
     command: 'ifup -a'
+    register: result
+    changed_when: "result.rc == 0"
     when: copy_interfaces.changed
 
   - name: Configure apt
@@ -90,10 +92,14 @@
   handlers:
   - name: Reload BIND
     command: 'rndc reconfig'
+    register: result
+    changed_when: "result.rc == 0"
   - name: Reload the systemd configuration
     systemd: daemon_reload=yes
   - name: Reload the zones
     command: 'rndc reload'
+    register: result
+    changed_when: "result.rc == 0"
   - name: Reload BIRD
     systemd: name=bird state=reloaded
   - name: Reload sysctls

@@ -1,3 +1,5 @@
 - name: Reconfigure raspi-firmware
   command: dpkg-reconfigure --frontend=noninteractive raspi-firmware
+  register: result
+  changed_when: "result.rc == 0"
 
