@@ -30,6 +30,7 @@
     - name: Install the busybox commands
       shell:
         chdir: "{{root_dir}}/bin/"
+        # noqa risky-shell-pipe
         cmd: './busybox --list | grep -wv busybox | xargs -n1 ln -s busybox'
         creates: "{{root_dir}}/bin/ls"
 

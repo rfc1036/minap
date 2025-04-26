@@ -21,7 +21,7 @@
     command: 'ifup -a'
     register: result
     changed_when: "result.rc == 0"
-    when: copy_interfaces.changed
+    when: copy_interfaces.changed # noqa no-handler
 
   - name: Configure apt
     copy:
