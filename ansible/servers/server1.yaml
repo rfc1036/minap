@@ -1,4 +1,5 @@
-- hosts: server1.minap.it
+- name: Install server1
+  hosts: server1.minap.it
   gather_facts: false
 
   tasks:

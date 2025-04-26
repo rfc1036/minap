@@ -1,4 +1,5 @@
-- hosts: blackhole.minap.it
+- name: Create a minimal container to answer ARPs for the blackhole IP
+  hosts: blackhole.minap.it
   gather_facts: false
 
   tasks:

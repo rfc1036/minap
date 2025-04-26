@@ -1,4 +1,5 @@
-- hosts: as112_hosts
+- name: Configure the host for the AS112 container
+  hosts: as112_hosts
   gather_facts: false
   vars:
     container_name: as112

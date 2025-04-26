@@ -1,4 +1,5 @@
-- hosts: as112_servers
+- name: Install an AS112 instance with NSD
+  hosts: as112_servers
   gather_facts: false
 
   tasks:
