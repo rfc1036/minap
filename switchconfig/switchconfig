@@ -219,9 +219,9 @@ switchconfig - generates configuration fragments from IXP Manager data
 
 =head1 SYNOPSIS
 
-switchconfig ACTION config [PORT_NUMBER|MEMBER_NAME]
+switchconfig [config|deconfig] SWITCH [PORT_NUMBER|MEMBER_NAME]
 
-switchconfig ACTION [cull-bgp|cull-bgp-off] [PORT_NUMBER|MEMBER_NAME]
+switchconfig [cull-bgp|cull-bgp-off] SWITCH [PORT_NUMBER|MEMBER_NAME]
 
 =head1 DESCRIPTION
 
