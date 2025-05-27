@@ -7,13 +7,13 @@
 [% IF switch_vendor == 'ios' %]
 configure terminal
 
-interface [% i.name +%]
+interface [% i.name || '???' +%]
  shutdown
  no channel-group
  no description
  no ip access-group BGP-CULLING in
  no ipv6 traffic-filter BGP6-CULLING in
- no mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+ no mac access-group MEMBER[% i.virtualinterfaceid || '???' %]-IN in
  no service-policy output SINGLE-BUFFER
  no speed
  no storm-control broadcast level
@@ -32,20 +32,20 @@ exit
 [% ELSIF switch_vendor == 'arista' %]
 configure
 
-interface ...
+interface [% i.name || '???' +%]
  shutdown
 
 [% ELSIF switch_vendor == 'huawei' %]
 system-view
 
-interface [% i.name +%]
+interface [% i.name || '???' +%]
  shutdown
  undo description
  undo eth-trunk
  undo port link-type
  y
  undo stp bpdu-filter
- undo traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid %]-IN
+ undo traffic-secure inbound acl name MEMBER[% i.virtualinterfaceid || '???' %]-IN
  undo mtu
  undo ip address
  undo ospf network-type
