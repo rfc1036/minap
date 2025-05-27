@@ -34,7 +34,20 @@ configure
 
 interface [% i.name || '???' +%]
  shutdown
-
+ no description
+ no mtu
+ no switchport access vlan
+ no channel-group
+ no ip access-group BGP-CULLING in
+ no ipv6 traffic-filter BGP6-CULLING in
+ no mac access-group MEMBER[% i.virtualinterfaceid || '???' %]-IN in
+ lldp transmit
+ lldp receive
+ default sflow enable
+ no storm-control broadcast
+ no storm-control multicast
+ no storm-control unknown-unicast
+ no spanning-tree bpdufilter
 [% ELSIF switch_vendor == 'huawei' %]
 system-view
 
