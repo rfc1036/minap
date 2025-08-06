@@ -71,6 +71,7 @@ interface [% i.name +%]
    mtu 9214
    switchport access vlan [% vlan_number(i) +%]
    mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
+   sflow enable
    storm-control broadcast level pps 100
    storm-control multicast level pps 100
    storm-control unknown-unicast level pps 100
@@ -97,6 +98,7 @@ interface [% i.name +%]
    mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
    no lldp transmit
    no lldp receive
+   sflow enable
    storm-control broadcast level pps 100
    storm-control multicast level pps 100
    storm-control unknown-unicast level pps 100
