@@ -22,8 +22,10 @@ use JSON::XS;
 my %Switch_Vendor = (
 	'sw-mynet'		=> 'Huawei',
 	'swc-seeweb'	=> 'Huawei',
+	'sw-metrolink2'	=> 'Arista',
 	'sw-metrolink3'	=> 'Arista',
 	'sw-telnet2'	=> 'Arista',
+	'sw-telnet3'	=> 'Arista',
 	'sw-seeweb3'	=> 'Arista',
 );
 
