@@ -96,7 +96,6 @@ interface [% i.name +%]
  enable
 [% END %]
  mac access-group MEMBER[% i.virtualinterfaceid %]-IN in
-[% PROCESS storm_control %]
  no lldp transmit
  no lldp receive
  channel-group [% i.lagindex %] mode active
