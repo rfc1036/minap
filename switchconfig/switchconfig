@@ -49,7 +49,7 @@ my $IXP_Manager_API = 'https://manager.minap.it/admin/api/';
 			unless $ENV{PAGER} and $ENV{PAGER} ne 'less';
         pod2usage(-verbose => 2, -exitstatus => 0);
 	} elsif ($action eq 'config') {
-		usage(1) if not $switch or not $port;
+		usage(1) if not $switch;
 	} elsif ($action eq 'deconfig') {
 		usage(1) if not $switch;
 	} elsif ($action eq 'cull-bgp') {
