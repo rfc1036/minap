@@ -156,6 +156,10 @@ sub ixpmanager_api {
 sub ixp_manager_api_key {
 	my ($url) = @_;
 
+	# IXP Manager include the contacts data only when using an API key.
+	# Here we lookup in .netrc the same API key as the /admin/ endpoint.
+	$url =~ s#^/api/#/admin/api/#;
+
 	my $machine = Net::Netrc->lookup($url);
 	die "No password found in .netrc for $url!\n"
 		if not $machine;
