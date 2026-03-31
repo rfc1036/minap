@@ -31,10 +31,10 @@ my %Switch_Vendor = (
 
 # This is the IXP Manager API endpoint. Add to your ~/.netrc a section like:
 #
-# machine https://manager.minap.it/api/
+# machine https://manager.minap.it/admin/api/
 #         password write-your-api-key-here
 #
-my $IXP_Manager_API = 'https://manager.minap.it/api/';
+my $IXP_Manager_API = 'https://manager.minap.it/admin/api/';
 
 ##############################################################################
 {
